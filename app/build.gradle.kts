@@ -34,7 +34,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -94,7 +94,7 @@ dependencies {
 }
 
 kapt {
-    correctErrorTypes=true
+    correctErrorTypes = true
 }
 
 configure<KtlintExtension> {
