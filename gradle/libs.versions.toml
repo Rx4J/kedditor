@@ -1,6 +1,8 @@
 [versions]
 agp = "8.2.0-alpha07"
 kotlin = "1.8.21"
+kapt-ver = "1.8.21"
+kotlin-serialization = "1.8.21"
 core-ktx = "1.9.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
@@ -8,6 +10,14 @@ espresso-core = "3.5.1"
 lifecycle-runtime-ktx = "2.6.1"
 activity-compose = "1.7.0"
 compose-bom = "2023.03.00"
+json-serialization-ver = "1.5.1"
+rxjava3-rxjava-ver = "3.1.5"
+rxjava3-rxandroid-ver = "3.0.2"
+rxjava3-rxkotlin-ver = "3.0.1"
+okhttp-ver = "4.11.0"
+retrofit-ver = "2.9.0"
+retrofit-converter-ver = "1.0.0"
+dagger-ver = "2.46.1"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -25,9 +35,27 @@ ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
 
+# Is third party dependencies
+json-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "json-serialization-ver" }
+rxjava3-rxjava = { group = "io.reactivex.rxjava3", name = "rxjava", version.ref = "rxjava3-rxjava-ver" }
+rxjava3-rxandroid = { group = "io.reactivex.rxjava3", name = "rxandroid", version.ref = "rxjava3-rxandroid-ver" }
+rxjava3-rxkotlin = { group = "io.reactivex.rxjava3", name = "rxkotlin", version.ref = "rxjava3-rxkotlin-ver" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp-ver" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit-ver" }
+retrofit-adapter-rxjava3 = { group = "com.squareup.retrofit2", name = "adapter-rxjava3", version.ref = "retrofit-ver" }
+retrofit-converter-kotlin = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofit-converter-ver" }
+dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger-ver" }
+dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger-ver" }
+dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger-ver" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+
+# Is third party plugins
+kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kapt-ver" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-serialization" }
+daggerPlugin = { id = "com.google.dagger.hilt.android", version.ref = "dagger-ver" }
 
 [bundles]
 
