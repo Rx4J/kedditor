@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Kedditor</string>
+
+    <string name="sublist_search_placeholder">Go to…</string>
 </resources>
