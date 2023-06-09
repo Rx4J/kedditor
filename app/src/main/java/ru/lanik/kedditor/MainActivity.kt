@@ -1,31 +1,13 @@
 package ru.lanik.kedditor
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.ui.Modifier
+import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
-import ru.lanik.kedditor.ui.theme.KedditorTheme
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            KedditorTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background,
-                ) {
-                    Text(
-                        text = "Hello world!",
-                    )
-                }
-            }
-        }
+        setContentView(R.layout.activity_main)
     }
 }
