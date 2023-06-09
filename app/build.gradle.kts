@@ -46,6 +46,7 @@ android {
         jvmTarget = "17"
     }
     buildFeatures {
+        viewBinding = true
         compose = true
     }
     composeOptions {
@@ -84,6 +85,10 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.adapter.rxjava3)
     implementation(libs.retrofit.converter.kotlin)
+    implementation(libs.constraintlayout)
+    implementation(libs.appcompat)
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
     testImplementation(libs.dagger.hilt.android.testing)
