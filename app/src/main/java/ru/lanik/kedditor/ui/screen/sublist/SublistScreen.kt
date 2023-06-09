@@ -92,7 +92,7 @@ fun TopSublistScreenBar(
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.None,
+                    imeAction = ImeAction.Done,
                 ),
                 contentPadding = PaddingValues(
                     horizontal = 10.dp,
