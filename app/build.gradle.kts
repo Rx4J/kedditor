@@ -90,6 +90,9 @@ dependencies {
     androidTestImplementation(libs.dagger.hilt.android.testing)
     kaptAndroidTest(libs.dagger.hilt.compiler)
     debugImplementation(libs.leakcanary)
+
+    // Project lib module
+    implementation(project(mapOf("path" to ":network")))
 }
 
 kapt {
