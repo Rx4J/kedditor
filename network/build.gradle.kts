@@ -6,7 +6,10 @@ plugins {
     alias(libs.plugins.kotlinAndroid)
 
     // Is third party plugins
+    alias(libs.plugins.kapt)
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ktlintPlugin)
+    alias(libs.plugins.daggerPlugin)
 }
 
 android {
@@ -39,12 +42,31 @@ android {
 }
 
 dependencies {
-
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    // Is third party dependencies
+    implementation(libs.json.serialization)
+    implementation(libs.rxjava3.rxjava)
+    implementation(libs.rxjava3.rxandroid)
+    implementation(libs.rxjava3.rxkotlin)
+    implementation(libs.okhttp)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.adapter.rxjava3)
+    implementation(libs.retrofit.converter.kotlin)
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
+    testImplementation(libs.dagger.hilt.android.testing)
+    kaptTest(libs.dagger.hilt.compiler)
+    androidTestImplementation(libs.dagger.hilt.android.testing)
+    kaptAndroidTest(libs.dagger.hilt.compiler)
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 configure<KtlintExtension> {
