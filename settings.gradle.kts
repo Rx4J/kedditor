@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "kedditor"
 include(":app")
+include(":network")
