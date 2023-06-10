@@ -100,7 +100,7 @@ fun TopSublistScreenBar(
                 ),
                 modifier = Modifier.weight(1f),
             )
-            
+
             IconButton(onClick = { onMoreClicked() }) {
                 Icon(
                     imageVector = Icons.Rounded.MoreVert,
