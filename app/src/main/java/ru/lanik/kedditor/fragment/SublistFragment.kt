@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import dagger.hilt.android.AndroidEntryPoint
 import ru.lanik.kedditor.ui.screen.sublist.SublistScreen
 import ru.lanik.kedditor.ui.theme.KedditorTheme
 
+@AndroidEntryPoint
 class SublistFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
