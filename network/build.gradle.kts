@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.rxjava3.rxandroid)
     implementation(libs.rxjava3.rxkotlin)
     implementation(libs.okhttp)
+    implementation(libs.okhttp.interceptor)
     implementation(libs.retrofit)
     implementation(libs.retrofit.adapter.rxjava3)
     implementation(libs.retrofit.converter.kotlin)
