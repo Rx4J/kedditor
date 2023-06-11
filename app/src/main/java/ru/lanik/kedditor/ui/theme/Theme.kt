@@ -56,7 +56,7 @@ fun KedditorTheme(
         else -> LightColorScheme
     }
     val view = LocalView.current
-    val activityContext = if(view.context is ViewComponentManager.FragmentContextWrapper) {
+    val activityContext = if (view.context is ViewComponentManager.FragmentContextWrapper) {
         ((view.context as ContextWrapper).baseContext as Activity)
     } else {
         view.context as Activity

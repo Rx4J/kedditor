@@ -139,7 +139,6 @@ fun SubredditRow(
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(text = subredditName)
-
         }
         Spacer(modifier = Modifier.height(4.dp))
     }
