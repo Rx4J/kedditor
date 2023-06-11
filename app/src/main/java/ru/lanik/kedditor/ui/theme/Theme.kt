@@ -1,6 +1,7 @@
 package ru.lanik.kedditor.ui.theme
 
 import android.app.Activity
+import android.content.ContextWrapper
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +15,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import dagger.hilt.android.internal.managers.ViewComponentManager
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -54,9 +56,14 @@ fun KedditorTheme(
         else -> LightColorScheme
     }
     val view = LocalView.current
+    val activityContext = if (view.context is ViewComponentManager.FragmentContextWrapper) {
+        ((view.context as ContextWrapper).baseContext as Activity)
+    } else {
+        view.context as Activity
+    }
     if (!view.isInEditMode) {
         SideEffect {
-            val window = (view.context as Activity).window
+            val window = activityContext.window
             window.statusBarColor = colorScheme.primary.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
