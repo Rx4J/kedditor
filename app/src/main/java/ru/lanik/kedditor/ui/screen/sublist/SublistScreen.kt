@@ -47,7 +47,7 @@ fun SublistScreen() {
             TopSublistScreenBar(
                 text = "",
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             LazyColumn {
                 item {
                     SubredditRow("Test")
@@ -117,24 +117,30 @@ fun SubredditRow(
     subredditIcon: ImageBitmap = ImageBitmap.imageResource(id = R.drawable.reddit_icon),
     onClick: () -> Unit = {},
 ) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.clickable {
-            onClick()
-        },
-    ) {
-        Spacer(modifier = Modifier.width(8.dp))
-        Image(
-            bitmap = subredditIcon,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
+    Column {
+        Spacer(modifier = Modifier.height(4.dp))
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .size(32.dp)
-                .clip(CircleShape),
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Text(text = subredditName)
+                .clickable {
+                    onClick()
+                }
+                .fillMaxWidth(),
+        ) {
+            Spacer(modifier = Modifier.width(12.dp))
+            Image(
+                bitmap = subredditIcon,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(CircleShape),
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Text(text = subredditName)
+        }
+        Spacer(modifier = Modifier.height(4.dp))
     }
 }
 
