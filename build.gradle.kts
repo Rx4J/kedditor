@@ -9,5 +9,6 @@ plugins {
     alias(libs.plugins.kotlinSerialization) apply false
     alias(libs.plugins.ktlintPlugin) apply false
     alias(libs.plugins.daggerPlugin) apply false
+    alias(libs.plugins.androidLibrary) apply false
 }
 true // Needed to make the Suppress annotation work for the plugins block
