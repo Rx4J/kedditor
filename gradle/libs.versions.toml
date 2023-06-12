@@ -23,6 +23,7 @@ leakcanary-ver = "2.11"
 navigation-ver = "2.5.3"
 constraintlayout-ver = "2.1.4"
 appcompat-ver = "1.6.1"
+coil-ver = "2.4.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -58,6 +59,7 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat-ver" }
 navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation-ver" }
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation-ver" }
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil-ver" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
