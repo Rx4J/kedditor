@@ -1,4 +1,4 @@
-package ru.lanik.network.utils.extension
+package ru.lanik.network.extension
 
 import ru.lanik.network.api.dto.subredditDTO.SubredditDto
 import ru.lanik.network.models.Subreddit
