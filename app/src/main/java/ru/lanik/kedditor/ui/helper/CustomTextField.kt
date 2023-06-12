@@ -22,6 +22,7 @@ fun CustomPaddingTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    readOnly: Boolean = false,
     textStyle: TextStyle = LocalTextStyle.current,
     placeholder: @Composable (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -32,6 +33,7 @@ fun CustomPaddingTextField(
     BasicTextField(
         value = value,
         modifier = modifier,
+        readOnly = readOnly,
         onValueChange = onValueChange,
         textStyle = textStyle,
         keyboardOptions = keyboardOptions,
