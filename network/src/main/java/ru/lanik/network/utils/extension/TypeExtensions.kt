@@ -7,10 +7,9 @@ fun List<SubredditDto>.toListSubreddit(): List<Subreddit> = this.map { item -> i
 
 fun SubredditDto.toSubreddit(): Subreddit {
     return Subreddit(
-        id = data.id,
-        name = data.name,
+        id = data.name,
+        name = data.displayName,
         namePrefixed = data.displayNamePrefixed,
-        nameWithoutPrefix = data.displayName,
         url = data.url,
         imageUrl = data.iconImg ?: data.iconCommunity,
         isSubscriber = data.isSubscriber,

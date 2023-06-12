@@ -22,7 +22,6 @@ data class SubredditDto(
         val created: Double?,
         @SerialName("user_is_subscriber")
         val isSubscriber: Boolean?,
-        val id: String,
         @SerialName("header_title")
         val description: String?,
         val url: String?,
