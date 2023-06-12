@@ -1,4 +1,4 @@
-package ru.lanik.network.utils
+package ru.lanik.kedditor.utils
 
 import io.reactivex.rxjava3.core.Scheduler
 
