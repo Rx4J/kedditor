@@ -24,7 +24,7 @@ class SublistFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 KedditorTheme {
-                    SublistScreen()
+                    SublistScreen(viewModel)
                 }
             }
         }
