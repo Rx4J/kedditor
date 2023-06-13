@@ -5,5 +5,5 @@ enum class ApiBaseConst(
     val auth: String,
 ) {
     BASE_URL("https://reddit.com/", "https://oauth.reddit.com/"),
-    SEARCH_SUBREDDIT("subreddit_autocomplete.json", "subreddit_autocomplete"),
+    SEARCH_SUBREDDIT("subreddit_autocomplete_v2.json", "subreddit_autocomplete_v2"),
 }
