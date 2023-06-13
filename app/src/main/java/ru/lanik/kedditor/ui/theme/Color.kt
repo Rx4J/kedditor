@@ -1,11 +1,38 @@
 package ru.lanik.kedditor.ui.theme
 
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+data class KedditorColors(
+    val primaryText: Color,
+    val primaryBackground: Color,
+    val secondaryText: Color,
+    val secondaryBackground: Color,
+    val tintColor: Color,
+    val controlColor: Color,
+    val errorColor: Color,
+)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val lightColorScheme = KedditorColors(
+    primaryBackground = Color(0xFFFFFFFF),
+    primaryText = Color(0xFF3D454C),
+    secondaryBackground = Color(0xFFF3F4F5),
+    secondaryText = Color(0xCC7A8A99),
+    tintColor = Color.Magenta,
+    controlColor = Color(0xFF7A8A99),
+    errorColor = Color(0xFFFF3377),
+)
+
+val darkColorScheme = KedditorColors(
+    primaryBackground = Color(0xFF23282D),
+    primaryText = Color(0xFFF2F4F5),
+    secondaryBackground = Color(0xFF191E23),
+    secondaryText = Color(0xCC7A8A99),
+    tintColor = Color.Magenta,
+    controlColor = Color(0xFF7A8A99),
+    errorColor = Color(0xFFFF6699),
+)
+
+val LocalKedditorColors = staticCompositionLocalOf<KedditorColors> {
+    error("No colors provided")
+}

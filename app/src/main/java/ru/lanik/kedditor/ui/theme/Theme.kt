@@ -2,76 +2,157 @@ package ru.lanik.kedditor.ui.theme
 
 import android.app.Activity
 import android.content.ContextWrapper
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import dagger.hilt.android.internal.managers.ViewComponentManager
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80,
-)
-
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-     */
-)
+enum class KedditorSize {
+    Small, Medium, Big,
+}
 
 @Composable
-fun KedditorTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit,
-) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
+private fun getActivityContext(): Activity {
     val view = LocalView.current
-    val activityContext = if (view.context is ViewComponentManager.FragmentContextWrapper) {
+    return if (view.context is ViewComponentManager.FragmentContextWrapper) {
         ((view.context as ContextWrapper).baseContext as Activity)
     } else {
         view.context as Activity
     }
+}
+
+@Composable
+fun SetStatusBarColor(
+    color: Color,
+) {
+    val darkTheme = isSystemInDarkTheme()
+    val view = LocalView.current
+    val activityContext = getActivityContext()
     if (!view.isInEditMode) {
         SideEffect {
             val window = activityContext.window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            window.statusBarColor = color.toArgb()
+            WindowCompat.getInsetsController(window, view)
+                .isAppearanceLightStatusBars = !darkTheme
         }
     }
+}
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
+@Composable
+fun SetNavigationBarColor(
+    color: Color,
+) {
+    val darkTheme = isSystemInDarkTheme()
+    val view = LocalView.current
+    val activityContext = getActivityContext()
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = activityContext.window
+            window.navigationBarColor = color.toArgb()
+            WindowCompat.getInsetsController(window, view)
+                .isAppearanceLightNavigationBars = !darkTheme
+        }
+    }
+}
+
+@Composable
+fun KedditorTheme(
+    textSize: KedditorSize = KedditorSize.Medium,
+    paddingSize: KedditorSize = KedditorSize.Medium,
+    corners: KedditorCorners = KedditorCorners.Rounded,
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit,
+) {
+    val colorScheme = when {
+        darkTheme -> darkColorScheme
+        else -> lightColorScheme
+    }
+
+    val typography = KedditorTypography(
+        heading = TextStyle(
+            fontSize = when (textSize) {
+                KedditorSize.Small -> 24.sp
+                KedditorSize.Medium -> 28.sp
+                KedditorSize.Big -> 32.sp
+            },
+            fontWeight = FontWeight.Bold,
+        ),
+        body = TextStyle(
+            fontSize = when (textSize) {
+                KedditorSize.Small -> 14.sp
+                KedditorSize.Medium -> 16.sp
+                KedditorSize.Big -> 18.sp
+            },
+            fontWeight = FontWeight.Normal,
+        ),
+        toolbar = TextStyle(
+            fontSize = when (textSize) {
+                KedditorSize.Small -> 14.sp
+                KedditorSize.Medium -> 16.sp
+                KedditorSize.Big -> 18.sp
+            },
+            fontWeight = FontWeight.Medium,
+        ),
+        caption = TextStyle(
+            fontSize = when (textSize) {
+                KedditorSize.Small -> 10.sp
+                KedditorSize.Medium -> 12.sp
+                KedditorSize.Big -> 14.sp
+            },
+        ),
+    )
+
+    val shapes = KedditorShape(
+        generalPadding = when (paddingSize) {
+            KedditorSize.Small -> 12.dp
+            KedditorSize.Medium -> 16.dp
+            KedditorSize.Big -> 20.dp
+        },
+        textHorizontalPadding = when (paddingSize) {
+            KedditorSize.Small -> 8.dp
+            KedditorSize.Medium -> 10.dp
+            KedditorSize.Big -> 12.dp
+        },
+        textVerticalPadding = when (paddingSize) {
+            KedditorSize.Small -> 2.dp
+            KedditorSize.Medium -> 4.dp
+            KedditorSize.Big -> 6.dp
+        },
+        cornersStyle = when (corners) {
+            KedditorCorners.Flat -> RoundedCornerShape(0.dp)
+            KedditorCorners.Rounded -> RoundedCornerShape(8.dp)
+        },
+    )
+    SetStatusBarColor(colorScheme.primaryBackground)
+    SetNavigationBarColor(colorScheme.primaryBackground)
+    CompositionLocalProvider(
+        LocalKedditorColors provides colorScheme,
+        LocalKedditorTypography provides typography,
+        LocalKedditorShape provides shapes,
         content = content,
     )
+}
+
+object KedditorTheme {
+    val colors: KedditorColors
+        @Composable
+        get() = LocalKedditorColors.current
+
+    val typography: KedditorTypography
+        @Composable
+        get() = LocalKedditorTypography.current
+
+    val shapes: KedditorShape
+        @Composable
+        get() = LocalKedditorShape.current
 }
