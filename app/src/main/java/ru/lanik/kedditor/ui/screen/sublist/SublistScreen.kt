@@ -19,10 +19,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,11 +42,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import ru.lanik.kedditor.R
 import ru.lanik.kedditor.ui.helper.CustomPaddingTextField
+import ru.lanik.kedditor.ui.helper.CustomTextFieldColors
+import ru.lanik.kedditor.ui.theme.KedditorTheme
 import ru.lanik.kedditor.utils.extension.toFormatStr
 
 @Composable
@@ -53,7 +56,9 @@ fun SublistScreen(
 ) {
     val searchVal = remember { mutableStateOf("") }
     val viewState by viewModel.sublistViewState.collectAsState()
-    Surface {
+    Surface(
+        color = KedditorTheme.colors.primaryBackground,
+    ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,
@@ -97,6 +102,7 @@ fun SublistScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopSublistScreenBar(
     text: String,
@@ -106,6 +112,10 @@ fun TopSublistScreenBar(
     onMoreClicked: () -> Unit = {},
 ) {
     Surface(
+        shape = KedditorTheme.shapes.cornersStyle,
+        color = KedditorTheme.colors.primaryBackground,
+        shadowElevation = 12.dp,
+        tonalElevation = 12.dp,
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
@@ -120,32 +130,38 @@ fun TopSublistScreenBar(
                 Icon(
                     imageVector = Icons.Rounded.ArrowBack,
                     contentDescription = null,
+                    tint = KedditorTheme.colors.tintColor,
                 )
             }
-
+            TextFieldDefaults.outlinedTextFieldPadding()
             CustomPaddingTextField(
                 value = text,
+                placeholderValue = stringResource(id = R.string.sublist_search_placeholder),
                 readOnly = isLoading,
                 onValueChange = {
                     onTextChange(it)
-                },
-                placeholder = {
-                    Text(text = stringResource(id = R.string.sublist_search_placeholder))
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done,
                 ),
                 contentPadding = PaddingValues(
-                    horizontal = 10.dp,
-                    vertical = 5.dp,
+                    horizontal = KedditorTheme.shapes.textHorizontalPadding,
+                    vertical = KedditorTheme.shapes.textVerticalPadding,
                 ),
+                colors = CustomTextFieldColors(
+                    textColor = KedditorTheme.colors.primaryText,
+                    placeholderColor = KedditorTheme.colors.primaryText,
+                    cursorColor = KedditorTheme.colors.tintColor,
+                ),
+                textStyle = KedditorTheme.typography.toolbar,
                 modifier = Modifier.weight(1f),
             )
 
             if (isLoading) {
                 Spacer(modifier = Modifier.width(8.dp))
                 CircularProgressIndicator(
+                    color = KedditorTheme.colors.tintColor,
                     modifier = Modifier.size(24.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -154,6 +170,7 @@ fun TopSublistScreenBar(
                     Icon(
                         imageVector = Icons.Rounded.MoreVert,
                         contentDescription = null,
+                        tint = KedditorTheme.colors.tintColor,
                     )
                 }
             }
@@ -168,6 +185,12 @@ fun SubredditRow(
     subredditIcon: String? = null,
     onClick: (String) -> Unit = {},
 ) {
+    val defaultIconUnit = @Composable {
+        Image(
+            bitmap = ImageBitmap.imageResource(id = R.drawable.reddit_icon),
+            contentDescription = null,
+        )
+    }
     Column {
         Spacer(modifier = Modifier.height(4.dp))
         Row(
@@ -180,31 +203,34 @@ fun SubredditRow(
                 .fillMaxWidth(),
         ) {
             Spacer(modifier = Modifier.width(12.dp))
-            if (subredditIcon == null) {
-                Image(
-                    bitmap = ImageBitmap.imageResource(id = R.drawable.reddit_icon),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape),
-                )
-            } else {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(subredditIcon)
-                        .build(),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape),
-                )
-            }
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(subredditIcon)
+                    .build(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                loading = {
+                    defaultIconUnit()
+                },
+                error = {
+                    defaultIconUnit()
+                },
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(CircleShape),
+            )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
-                Text(text = subredditName)
-                Text(text = "${subredditSubs.toFormatStr()} members", fontSize = 12.sp)
+                Text(
+                    text = subredditName,
+                    color = KedditorTheme.colors.primaryText,
+                    style = KedditorTheme.typography.body,
+                )
+                Text(
+                    text = "${subredditSubs.toFormatStr()} members",
+                    color = KedditorTheme.colors.secondaryText,
+                    style = KedditorTheme.typography.caption,
+                )
             }
         }
         Spacer(modifier = Modifier.height(4.dp))
@@ -214,19 +240,25 @@ fun SubredditRow(
 @Preview
 @Composable
 fun SublistScreenPreview() {
-    Surface {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
+    KedditorTheme(
+        darkTheme = true,
+    ) {
+        Surface(
+            color = KedditorTheme.colors.primaryBackground,
         ) {
-            TopSublistScreenBar(
-                text = "",
-                isLoading = false,
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            LazyColumn {
-                item {
-                    SubredditRow("Test")
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Top,
+            ) {
+                TopSublistScreenBar(
+                    text = "",
+                    isLoading = false,
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                LazyColumn {
+                    item {
+                        SubredditRow("Test")
+                    }
                 }
             }
         }
