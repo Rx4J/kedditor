@@ -24,7 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -133,7 +132,6 @@ fun TopSublistScreenBar(
                     tint = KedditorTheme.colors.tintColor,
                 )
             }
-            TextFieldDefaults.outlinedTextFieldPadding()
             CustomPaddingTextField(
                 value = text,
                 placeholderValue = stringResource(id = R.string.sublist_search_placeholder),
