@@ -47,6 +47,8 @@ import ru.lanik.kedditor.R
 import ru.lanik.kedditor.ui.helper.CustomPaddingTextField
 import ru.lanik.kedditor.ui.helper.CustomTextFieldColors
 import ru.lanik.kedditor.ui.theme.KedditorTheme
+import ru.lanik.kedditor.ui.theme.SetNavigationBarColor
+import ru.lanik.kedditor.ui.theme.SetStatusBarColor
 import ru.lanik.kedditor.utils.extension.toFormatStr
 
 @Composable
@@ -55,6 +57,8 @@ fun SublistScreen(
 ) {
     val searchVal = remember { mutableStateOf("") }
     val viewState by viewModel.sublistViewState.collectAsState()
+    SetStatusBarColor(KedditorTheme.colors.secondaryBackground)
+    SetNavigationBarColor(KedditorTheme.colors.primaryBackground)
     Surface(
         color = KedditorTheme.colors.primaryBackground,
     ) {
@@ -112,7 +116,7 @@ fun TopSublistScreenBar(
 ) {
     Surface(
         shape = KedditorTheme.shapes.cornersStyle,
-        color = KedditorTheme.colors.primaryBackground,
+        color = KedditorTheme.colors.secondaryBackground,
         shadowElevation = 12.dp,
         tonalElevation = 12.dp,
         modifier = Modifier
