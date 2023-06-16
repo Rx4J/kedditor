@@ -1,19 +1,68 @@
 package ru.lanik.kedditor.ui.theme
 
+import android.app.Activity
+import android.content.ContextWrapper
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import androidx.core.view.WindowCompat
+import dagger.hilt.android.internal.managers.ViewComponentManager
 
 enum class KedditorSize {
     Small, Medium, Big,
+}
+
+@Composable
+private fun getActivityContext(): Activity {
+    val view = LocalView.current
+    return if (view.context is ViewComponentManager.FragmentContextWrapper) {
+        ((view.context as ContextWrapper).baseContext as Activity)
+    } else {
+        view.context as Activity
+    }
+}
+
+@Composable
+fun SetStatusBarColor(
+    color: Color,
+) {
+    val darkTheme = isSystemInDarkTheme()
+    val view = LocalView.current
+    val activityContext = getActivityContext()
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = activityContext.window
+            window.statusBarColor = color.toArgb()
+            WindowCompat.getInsetsController(window, view)
+                .isAppearanceLightStatusBars = !darkTheme
+        }
+    }
+}
+
+@Composable
+fun SetNavigationBarColor(
+    color: Color,
+) {
+    val darkTheme = isSystemInDarkTheme()
+    val view = LocalView.current
+    val activityContext = getActivityContext()
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = activityContext.window
+            window.navigationBarColor = color.toArgb()
+            WindowCompat.getInsetsController(window, view)
+                .isAppearanceLightNavigationBars = !darkTheme
+        }
+    }
 }
 
 @Composable
@@ -24,7 +73,6 @@ fun KedditorTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    val systemUiController = rememberSystemUiController()
     val colorScheme = when {
         darkTheme -> darkColorScheme
         else -> lightColorScheme
@@ -85,16 +133,8 @@ fun KedditorTheme(
             KedditorCorners.Rounded -> RoundedCornerShape(8.dp)
         },
     )
-
-    if (!LocalView.current.isInEditMode) {
-        SideEffect {
-            systemUiController.setSystemBarsColor(
-                color = colorScheme.primaryBackground,
-                darkIcons = !darkTheme,
-            )
-        }
-    }
-
+    SetStatusBarColor(colorScheme.primaryBackground)
+    SetNavigationBarColor(colorScheme.primaryBackground)
     CompositionLocalProvider(
         LocalKedditorColors provides colorScheme,
         LocalKedditorTypography provides typography,
