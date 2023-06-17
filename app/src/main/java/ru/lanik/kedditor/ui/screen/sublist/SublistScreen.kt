@@ -15,15 +15,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,7 +45,6 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import ru.lanik.kedditor.R
 import ru.lanik.kedditor.ui.helper.CustomPaddingTextField
-import ru.lanik.kedditor.ui.helper.CustomTextFieldColors
 import ru.lanik.kedditor.ui.theme.KedditorTheme
 import ru.lanik.kedditor.ui.theme.SetNavigationBarColor
 import ru.lanik.kedditor.ui.theme.SetStatusBarColor
@@ -105,7 +104,6 @@ fun SublistScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopSublistScreenBar(
     text: String,
@@ -117,8 +115,7 @@ fun TopSublistScreenBar(
     Surface(
         shape = KedditorTheme.shapes.cornersStyle,
         color = KedditorTheme.colors.secondaryBackground,
-        shadowElevation = 12.dp,
-        tonalElevation = 12.dp,
+        elevation = 12.dp,
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
@@ -138,7 +135,6 @@ fun TopSublistScreenBar(
             }
             CustomPaddingTextField(
                 value = text,
-                placeholderValue = stringResource(id = R.string.sublist_search_placeholder),
                 readOnly = isLoading,
                 onValueChange = {
                     onTextChange(it)
@@ -151,11 +147,18 @@ fun TopSublistScreenBar(
                     horizontal = KedditorTheme.shapes.textHorizontalPadding,
                     vertical = KedditorTheme.shapes.textVerticalPadding,
                 ),
-                colors = CustomTextFieldColors(
+                colors = TextFieldDefaults.outlinedTextFieldColors(
                     textColor = KedditorTheme.colors.primaryText,
                     placeholderColor = KedditorTheme.colors.primaryText,
                     cursorColor = KedditorTheme.colors.tintColor,
+                    unfocusedBorderColor = KedditorTheme.colors.primaryText,
                 ),
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.sublist_search_placeholder),
+                        style = KedditorTheme.typography.toolbar,
+                    )
+                },
                 textStyle = KedditorTheme.typography.toolbar,
                 modifier = Modifier.weight(1f),
             )
