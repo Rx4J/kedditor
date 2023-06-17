@@ -21,7 +21,6 @@ class SublistViewModel @Inject constructor(
         subredditsRepository.postFetchData.subscribe { newValue ->
             data.value = newValue
         }.also { compositeDisposable.add(it) }
-        subredditsRepository.fetchSubreddits(ApiSubredditSource.DEFAULT, false)
         return@lazy data
     }
     val sublistViewState: StateFlow<SublistModel> = _sublistViewState.asStateFlow()
