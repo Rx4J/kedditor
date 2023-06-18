@@ -39,14 +39,6 @@ class SublistViewModel @Inject constructor(
         )
     }
 
-    fun onBackClicked() {
-        // TODO
-    }
-
-    fun onDirectClicked(name: String) {
-        // TODO
-    }
-
     private fun refreshSublist(source: ApiSubredditSource, isAuth: Boolean) {
         subredditsRepository.fetchSubreddits(source, isAuth)
     }
