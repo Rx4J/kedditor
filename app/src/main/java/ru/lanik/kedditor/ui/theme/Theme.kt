@@ -133,8 +133,6 @@ fun KedditorTheme(
             KedditorCorners.Rounded -> RoundedCornerShape(8.dp)
         },
     )
-    SetStatusBarColor(colorScheme.primaryBackground)
-    SetNavigationBarColor(colorScheme.primaryBackground)
     CompositionLocalProvider(
         LocalKedditorColors provides colorScheme,
         LocalKedditorTypography provides typography,
