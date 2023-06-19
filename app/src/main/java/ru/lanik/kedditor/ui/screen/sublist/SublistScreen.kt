@@ -33,7 +33,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import ru.lanik.kedditor.R
 import ru.lanik.kedditor.ui.helper.CustomPaddingTextField
 import ru.lanik.kedditor.ui.helper.SubredditRow
@@ -44,7 +43,6 @@ import ru.lanik.kedditor.ui.theme.SetStatusBarColor
 @Composable
 fun SublistScreen(
     viewModel: SublistViewModel,
-    navController: NavController,
 ) {
     val searchVal = remember { mutableStateOf("") }
     val viewState by viewModel.sublistViewState.collectAsState()
@@ -64,9 +62,7 @@ fun SublistScreen(
                     searchVal.value = it
                     viewModel.onSearching(it)
                 },
-                onBackClicked = {
-                    navController.navigateUp()
-                },
+                onBackClicked = viewModel::onNavigateBack,
             )
             Spacer(modifier = Modifier.height(4.dp))
             LazyColumn {
