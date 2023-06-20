@@ -13,6 +13,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
+import ru.lanik.network.api.PostAPI
 import ru.lanik.network.api.SubredditsAPI
 import ru.lanik.network.api.interceptor.LoggingInterceptorQualifier
 import ru.lanik.network.constants.ApiBaseConst
@@ -57,4 +58,9 @@ class ApiModule {
     @Singleton
     fun provideApiSubreddits(retrofit: Retrofit): SubredditsAPI =
         retrofit.create(SubredditsAPI::class.java)
+
+    @Provides
+    @Singleton
+    fun provideApiPost(retrofit: Retrofit): PostAPI =
+        retrofit.create(PostAPI::class.java)
 }
