@@ -1,7 +1,7 @@
 package ru.lanik.kedditor.ui.screen.sublist
 
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.navigation.NavController
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -9,12 +9,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import ru.lanik.kedditor.model.SublistModel
 import ru.lanik.kedditor.repository.SubredditsRepository
 import ru.lanik.network.constants.ApiSubredditSource
-import javax.inject.Inject
 
-@HiltViewModel
-class SublistViewModel @Inject constructor(
+class SublistViewModel(
     private val compositeDisposable: CompositeDisposable,
     private val subredditsRepository: SubredditsRepository.Reactive,
+    private val navController: NavController,
 ) : ViewModel() {
     private val _sublistViewState: MutableStateFlow<SublistModel> by lazy {
         val data = MutableStateFlow(SublistModel())
@@ -39,12 +38,8 @@ class SublistViewModel @Inject constructor(
         )
     }
 
-    fun onBackClicked() {
-        // TODO
-    }
-
-    fun onDirectClicked(name: String) {
-        // TODO
+    fun onNavigateBack() {
+        navController.navigateUp()
     }
 
     private fun refreshSublist(source: ApiSubredditSource, isAuth: Boolean) {

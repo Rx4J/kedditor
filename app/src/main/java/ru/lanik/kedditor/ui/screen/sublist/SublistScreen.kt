@@ -61,7 +61,7 @@ fun SublistScreen(
                     searchVal.value = it
                     viewModel.onSearching(it)
                 },
-                onBackClicked = viewModel::onBackClicked,
+                onBackClicked = viewModel::onNavigateBack,
             )
             Spacer(modifier = Modifier.height(4.dp))
             LazyColumn {
@@ -72,7 +72,7 @@ fun SublistScreen(
                                 subredditName = it.name,
                                 subredditSubs = it.subscribers ?: 0,
                                 subredditIcon = it.imageUrl,
-                                onClick = viewModel::onDirectClicked,
+                                onClick = { },
                             )
                         }
                     }
@@ -83,7 +83,7 @@ fun SublistScreen(
                                 subredditName = it.name,
                                 subredditSubs = it.subscribers ?: 0,
                                 subredditIcon = it.imageUrl,
-                                onClick = viewModel::onDirectClicked,
+                                onClick = { },
                             )
                         }
                     }
