@@ -1,7 +1,5 @@
 package ru.lanik.kedditor.ui.screen.sublist
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,17 +11,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,25 +26,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
 import ru.lanik.kedditor.R
 import ru.lanik.kedditor.ui.helper.CustomPaddingTextField
 import ru.lanik.kedditor.ui.helper.CustomTextFieldColors
+import ru.lanik.kedditor.ui.helper.SubredditRow
 import ru.lanik.kedditor.ui.theme.KedditorTheme
 import ru.lanik.kedditor.ui.theme.SetNavigationBarColor
 import ru.lanik.kedditor.ui.theme.SetStatusBarColor
-import ru.lanik.kedditor.utils.extension.toFormatStr
 
 @Composable
 fun SublistScreen(
@@ -105,7 +93,6 @@ fun SublistScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopSublistScreenBar(
     text: String,
@@ -177,65 +164,6 @@ fun TopSublistScreenBar(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun SubredditRow(
-    subredditName: String,
-    subredditSubs: Int = 0,
-    subredditIcon: String? = null,
-    onClick: (String) -> Unit = {},
-) {
-    val defaultIconUnit = @Composable {
-        Image(
-            bitmap = ImageBitmap.imageResource(id = R.drawable.reddit_icon),
-            contentDescription = null,
-        )
-    }
-    Column {
-        Spacer(modifier = Modifier.height(4.dp))
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .clickable {
-                    onClick(subredditName)
-                }
-                .fillMaxWidth(),
-        ) {
-            Spacer(modifier = Modifier.width(12.dp))
-            SubcomposeAsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(subredditIcon)
-                    .build(),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                loading = {
-                    defaultIconUnit()
-                },
-                error = {
-                    defaultIconUnit()
-                },
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(CircleShape),
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(
-                    text = subredditName,
-                    color = KedditorTheme.colors.primaryText,
-                    style = KedditorTheme.typography.body,
-                )
-                Text(
-                    text = "${subredditSubs.toFormatStr()} members",
-                    color = KedditorTheme.colors.secondaryText,
-                    style = KedditorTheme.typography.caption,
-                )
-            }
-        }
-        Spacer(modifier = Modifier.height(4.dp))
     }
 }
 
