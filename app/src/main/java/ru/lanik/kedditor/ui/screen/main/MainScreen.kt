@@ -65,8 +65,8 @@ fun MainScreen(
     val viewState by viewModel.mainViewState.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val drawerScope = rememberCoroutineScope()
-    SetStatusBarColor(KedditorTheme.colors.secondaryBackground)
-    SetNavigationBarColor(KedditorTheme.colors.secondaryBackground)
+    SetStatusBarColor(KedditorTheme.colors.primaryBackground)
+    SetNavigationBarColor(KedditorTheme.colors.primaryBackground)
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     val closeDrawer = {
