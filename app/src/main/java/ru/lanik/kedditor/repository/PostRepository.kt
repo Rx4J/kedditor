@@ -1,8 +1,8 @@
 package ru.lanik.kedditor.repository
 
 import io.reactivex.rxjava3.subjects.ReplaySubject
-import ru.lanik.kedditor.model.PostFetch
-import ru.lanik.kedditor.model.PostSource
+import ru.lanik.kedditor.model.fetch.PostFetch
+import ru.lanik.kedditor.model.source.PostSource
 
 interface PostRepository {
     interface Reactive {

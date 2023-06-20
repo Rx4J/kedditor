@@ -1,5 +1,6 @@
-package ru.lanik.kedditor.model
+package ru.lanik.kedditor.model.fetch
 
+import ru.lanik.kedditor.model.source.SubredditSource
 import ru.lanik.network.models.Subreddit
 
 data class SubredditFetch(

@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.lanik.kedditor.model.PostModel
-import ru.lanik.kedditor.model.PostSource
-import ru.lanik.kedditor.model.SubredditSource
+import ru.lanik.kedditor.model.source.PostSource
+import ru.lanik.kedditor.model.source.SubredditSource
 import ru.lanik.kedditor.repository.PostRepository
 import ru.lanik.kedditor.repository.SubredditsRepository
 import ru.lanik.network.constants.DefaultPostSort
