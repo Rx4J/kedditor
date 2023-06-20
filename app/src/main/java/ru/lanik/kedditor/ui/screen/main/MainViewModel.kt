@@ -3,6 +3,7 @@ package ru.lanik.kedditor.ui.screen.main
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -68,6 +69,12 @@ class MainViewModel(
 
     fun getSort(): String {
         return defaultPath.sortToStr()
+    }
+
+    fun getSubredditImageUrl(subreddit: String): Single<String> {
+        return subredditsRepository.getSubredditInfo(SubredditSource(subreddit)).map {
+            return@map it.imageUrl ?: ""
+        }
     }
 
     fun fetchPosts(

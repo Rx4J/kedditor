@@ -18,6 +18,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import ru.lanik.network.models.Post
@@ -50,6 +51,7 @@ fun InfiniteListHandler(
 fun InfinityPostView(
     surfaceColor: Color,
     modifier: Modifier = Modifier,
+    fetchSubImage: (String) -> Single<String>,
     posts: SnapshotStateList<Post>? = null,
     isNewPath: Boolean = false,
     onLoadMore: () -> Unit = {},
@@ -65,7 +67,10 @@ fun InfinityPostView(
         ) {
             posts?.let { notNull ->
                 items(notNull) {
-                    PostViewItem(post = it)
+                    PostViewItem(
+                        post = it,
+                        fetchSubImage = fetchSubImage,
+                    )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
             }
