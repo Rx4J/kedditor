@@ -142,7 +142,7 @@ fun PostViewItem(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = post.subredditNamePrefixed,
+                    text = post.name,
                     color = KedditorTheme.colors.primaryText,
                     style = KedditorTheme.typography.body,
                 )
