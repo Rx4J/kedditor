@@ -34,7 +34,7 @@ fun PostDto.toPost(): Post {
         saved = data.saved,
         title = data.title,
         subredditNamePrefixed = data.subredditNamePrefixed,
-        name = data.name,
+        name = data.subreddit,
         score = data.score,
         created = data.created,
         id = data.name,
