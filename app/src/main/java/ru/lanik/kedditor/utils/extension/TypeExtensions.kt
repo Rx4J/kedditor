@@ -11,3 +11,10 @@ fun Int.toFormatStr(delim: String = " "): String {
     )
     return strBuilder.format(this).replace(",", delim)
 }
+
+fun String.fixAuth(auth: Boolean): String {
+    if (!auth) {
+        return this.plus(".json")
+    }
+    return this
+}
