@@ -6,6 +6,7 @@ import ru.lanik.kedditor.repository.PostRepository
 import ru.lanik.kedditor.repository.SubredditsRepository
 import ru.lanik.network.constants.DefaultPostSort
 import ru.lanik.network.constants.DefaultPostSource
+import ru.lanik.network.constants.DefaultSubredditSource
 
 class MainViewModelFactory(
     private val compositeDisposable: CompositeDisposable,
@@ -15,6 +16,7 @@ class MainViewModelFactory(
     fun getViewModel(
         navController: NavController,
         sort: DefaultPostSort = DefaultPostSort.HOT,
+        subredditSource: String = DefaultSubredditSource.DEFAULT.name.lowercase(),
         source: String = DefaultPostSource.POPULAR.name.lowercase(),
     ): MainViewModel {
         return MainViewModel(
@@ -23,6 +25,7 @@ class MainViewModelFactory(
             subredditsRepository = subredditsRepository,
             navController = navController,
             initSort = sort,
+            initSubredditSource = subredditSource,
             initSource = source,
         )
     }

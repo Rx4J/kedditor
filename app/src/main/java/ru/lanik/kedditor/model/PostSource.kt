@@ -7,6 +7,10 @@ data class PostSource(
     val sortType: DefaultPostSort,
 ) {
     fun toPath(): String {
-        return "$mainSrc/${sortType.name.lowercase()}"
+        return "$mainSrc/${sortToStr()}"
+    }
+
+    fun sortToStr(): String {
+        return sortType.name.lowercase()
     }
 }
