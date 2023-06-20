@@ -2,8 +2,8 @@ package ru.lanik.kedditor.repository
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.ReplaySubject
-import ru.lanik.kedditor.model.PostFetch
-import ru.lanik.kedditor.model.PostSource
+import ru.lanik.kedditor.model.fetch.PostFetch
+import ru.lanik.kedditor.model.source.PostSource
 import ru.lanik.kedditor.utils.SchedulerPolicy
 import ru.lanik.kedditor.utils.extension.applySchedulerPolicy
 import ru.lanik.kedditor.utils.extension.fixAuth

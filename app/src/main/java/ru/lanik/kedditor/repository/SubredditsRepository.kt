@@ -1,8 +1,8 @@
 package ru.lanik.kedditor.repository
 
 import io.reactivex.rxjava3.subjects.ReplaySubject
-import ru.lanik.kedditor.model.SubredditFetch
-import ru.lanik.kedditor.model.SubredditSource
+import ru.lanik.kedditor.model.fetch.SubredditFetch
+import ru.lanik.kedditor.model.source.SubredditSource
 
 interface SubredditsRepository {
     interface Reactive {

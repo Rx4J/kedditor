@@ -1,4 +1,4 @@
-package ru.lanik.kedditor.model
+package ru.lanik.kedditor.model.source
 
 import ru.lanik.network.constants.DefaultPostSort
 
