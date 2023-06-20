@@ -123,6 +123,7 @@ fun MainScreen(
                     posts = viewState.posts,
                     isNewPath = viewState.isLoading,
                     onLoadMore = viewModel::fetchPosts,
+                    fetchSubImage = viewModel::getSubredditImageUrl,
                 )
                 BottomActionBar(
                     actionList = listOf(

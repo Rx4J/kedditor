@@ -23,13 +23,13 @@ class SublistViewModel(
     private val _sublistViewState: MutableStateFlow<SublistModel> by lazy {
         val data = MutableStateFlow(SublistModel())
         subredditsRepository.subredditFetchData.subscribe { newValue ->
-            if(newValue.isSearch) {
+            if (newValue.isSearch) {
                 data.value = data.value.copy(
-                    subredditSearch = newValue.subredditList
+                    subredditSearch = newValue.subredditList,
                 )
             } else {
                 data.value = data.value.copy(
-                    subreddits = newValue.subredditList
+                    subreddits = newValue.subredditList,
                 )
             }
         }.also { compositeDisposable.add(it) }
@@ -58,7 +58,7 @@ class SublistViewModel(
         newSource: DefaultSubredditSource? = null,
     ) {
         newSource?.let {
-            if(it.name.lowercase() != defaultPath.mainSrc) {
+            if (it.name.lowercase() != defaultPath.mainSrc) {
                 defaultPath = SubredditSource.fromEnum(it)
             }
         }
