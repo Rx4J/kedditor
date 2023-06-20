@@ -2,11 +2,23 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_graph"
-    app:startDestination="@id/SublistFragment">
+    app:startDestination="@id/MainFragment">
 
     <fragment
         android:id="@+id/SublistFragment"
         android:name="ru.lanik.kedditor.fragment.SublistFragment"
         android:label="@string/sublist_fragment_name" >
+        <action
+            android:id="@+id/action_sub_to_main"
+            app:destination="@id/SublistFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/MainFragment"
+        android:name="ru.lanik.kedditor.fragment.MainFragment"
+        android:label="@string/main_fragment_name" >
+        <action
+            android:id="@+id/action_main_to_sub"
+            app:destination="@id/SublistFragment" />
     </fragment>
 </navigation>
