@@ -73,14 +73,21 @@ class MainViewModel(
         newSource: String? = null,
         newSort: DefaultPostSort? = null,
     ) {
-        if (newSource != null || newSort != null) {
-            _mainViewState.value = _mainViewState.value.copy(
-                isLoading = true,
-            )
-            defaultPath = PostSource(
-                mainSrc = newSource ?: defaultPath.mainSrc,
-                sortType = newSort ?: initSort,
-            )
+        newSource?.let {
+            if(it != defaultPath.mainSrc) {
+                defaultPath = defaultPath.copy(
+                    mainSrc = it,
+                )
+                setIsLoading(true)
+            }
+        }
+        newSort?.let {
+            if(it != defaultPath.sortType) {
+                defaultPath = defaultPath.copy(
+                    sortType = it,
+                )
+                setIsLoading(true)
+            }
         }
         var afterId = ""
         mainViewState.value.posts?.let {
@@ -93,6 +100,14 @@ class MainViewModel(
 
     fun onNavigateTo(commandId: Int) {
         navController.navigate(commandId)
+    }
+
+    private fun setIsLoading(isLoading: Boolean) {
+        if(_mainViewState.value.isLoading != isLoading) {
+            _mainViewState.value = _mainViewState.value.copy(
+                isLoading = true,
+            )
+        }
     }
 
     override fun onCleared() {
