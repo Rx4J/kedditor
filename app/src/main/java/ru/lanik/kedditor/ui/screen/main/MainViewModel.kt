@@ -20,7 +20,7 @@ class MainViewModel(
     private val postRepository: PostRepository.Reactive,
     private val subredditsRepository: SubredditsRepository.Reactive,
     private val navController: NavController,
-    private val initSort: DefaultPostSort,
+    initSort: DefaultPostSort,
     initSource: String,
 ) : ViewModel() {
     private var defaultPath = PostSource(
