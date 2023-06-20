@@ -11,14 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,7 +56,7 @@ fun SubredditRow(
     Button(
         onClick = { onClick(subredditName) },
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = backgroundColor,
+            containerColor = backgroundColor,
         ),
     ) {
         Row(
@@ -112,7 +112,8 @@ fun PostViewItem(
     Surface(
         shape = KedditorTheme.shapes.cornersStyle,
         color = KedditorTheme.colors.secondaryBackground,
-        elevation = 8.dp,
+        tonalElevation = 8.dp,
+        shadowElevation = 8.dp,
     ) {
         Column(
             modifier = Modifier
@@ -183,7 +184,7 @@ fun PostViewItem(
             ) {
                 IconButton(
                     onClick = { onDirUp(post.url) },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.ArrowBack,
@@ -194,7 +195,7 @@ fun PostViewItem(
                 }
                 Row(
                     horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.weight(2f)
+                    modifier = Modifier.weight(2f),
                 ) {
                     Text(
                         text = post.score.toFormatStr("."),
@@ -204,7 +205,7 @@ fun PostViewItem(
                 }
                 IconButton(
                     onClick = { onDirDown(post.url) },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.ArrowBack,
