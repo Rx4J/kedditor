@@ -2,12 +2,13 @@ package ru.lanik.kedditor.repository
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.ReplaySubject
-import ru.lanik.kedditor.model.SublistModel
+import ru.lanik.kedditor.model.SubredditFetch
+import ru.lanik.kedditor.model.SubredditSource
 import ru.lanik.kedditor.utils.SchedulerPolicy
 import ru.lanik.kedditor.utils.extension.applySchedulerPolicy
+import ru.lanik.kedditor.utils.extension.fixAuth
 import ru.lanik.network.api.SubredditsAPI
 import ru.lanik.network.constants.ApiBaseConst
-import ru.lanik.network.constants.ApiSubredditSource
 import ru.lanik.network.extension.toListSubreddit
 
 class RxSubredditsRepository(
@@ -15,22 +16,22 @@ class RxSubredditsRepository(
     private val schedulerPolicy: SchedulerPolicy,
     private val compositeDisposable: CompositeDisposable,
 ) : SubredditsRepository.Reactive {
-    override val postFetchData: ReplaySubject<SublistModel> = ReplaySubject.create()
+    override val subredditFetchData: ReplaySubject<SubredditFetch> = ReplaySubject.create()
 
     override fun fetchSubreddits(
-        source: ApiSubredditSource,
-        isAuth: Boolean,
+        source: SubredditSource,
         page: String,
     ) {
-        val direct = if (isAuth) source.auth else source.notAuth
+        val direct = source.mainSrc.fixAuth(false)
         subredditsAPI.getSubredditListing(direct, page)
             .applySchedulerPolicy(schedulerPolicy)
             .subscribe({ data ->
                 val subredditList = data.data.children.toListSubreddit()
-                postFetchData.onNext(
-                    postFetchData.value?.copy(
-                        subreddits = subredditList,
-                    ) ?: SublistModel(subreddits = subredditList, null),
+                subredditFetchData.onNext(
+                    SubredditFetch(
+                        source = source,
+                        subredditList = subredditList,
+                    )
                 )
             }, { error ->
                 handleError(error)
@@ -38,11 +39,10 @@ class RxSubredditsRepository(
     }
 
     override fun getSubredditsByName(
-        isAuth: Boolean,
         query: String,
         limit: Int,
     ) {
-        val cmd = if (isAuth) {
+        val cmd = if (true) {
             ApiBaseConst.SEARCH_SUBREDDIT.auth
         } else {
             ApiBaseConst.SEARCH_SUBREDDIT.notAuth
@@ -51,10 +51,12 @@ class RxSubredditsRepository(
             .applySchedulerPolicy(schedulerPolicy)
             .subscribe({ data ->
                 val subredditList = data.data.children.toListSubreddit()
-                postFetchData.onNext(
-                    postFetchData.value?.copy(
-                        subredditSearch = subredditList,
-                    ) ?: SublistModel(null, subredditList),
+                subredditFetchData.onNext(
+                    SubredditFetch(
+                        source = SubredditSource(query),
+                        subredditList = subredditList,
+                        isSearch = true,
+                    )
                 )
             }, { error ->
                 handleError(error)
@@ -63,6 +65,6 @@ class RxSubredditsRepository(
 
     override fun handleError(error: Throwable) {
         // TODO: Processing error
-        postFetchData.onError(error)
+        subredditFetchData.onError(error)
     }
 }

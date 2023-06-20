@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.lanik.kedditor.model.PostModel
 import ru.lanik.kedditor.model.PostSource
+import ru.lanik.kedditor.model.SubredditSource
 import ru.lanik.kedditor.repository.PostRepository
 import ru.lanik.kedditor.repository.SubredditsRepository
-import ru.lanik.network.constants.ApiSubredditSource
 import ru.lanik.network.constants.DefaultPostSort
 import ru.lanik.network.models.Post
 
@@ -21,6 +21,7 @@ class MainViewModel(
     private val subredditsRepository: SubredditsRepository.Reactive,
     private val navController: NavController,
     initSort: DefaultPostSort,
+    initSubredditSource: String,
     initSource: String,
 ) : ViewModel() {
     private var defaultPath = PostSource(
@@ -43,9 +44,9 @@ class MainViewModel(
                     data.value.isLoading = false
                 }
             }.also { compositeDisposable.add(it) }
-        subredditsRepository.postFetchData.subscribe { newValue ->
+        subredditsRepository.subredditFetchData.subscribe { newValue ->
             data.value = data.value.copy(
-                subreddits = newValue.subreddits,
+                subreddits = newValue.subredditList,
             )
         }.also { compositeDisposable.add(it) }
         return@lazy data
@@ -57,7 +58,7 @@ class MainViewModel(
             fetchPosts(getSource())
         }
         if (mainViewState.value.subreddits == null) {
-            subredditsRepository.fetchSubreddits(ApiSubredditSource.DEFAULT, false)
+            subredditsRepository.fetchSubreddits(SubredditSource(initSubredditSource))
         }
     }
 
@@ -66,7 +67,7 @@ class MainViewModel(
     }
 
     fun getSort(): String {
-        return defaultPath.sortType.name.lowercase()
+        return defaultPath.sortToStr()
     }
 
     fun fetchPosts(

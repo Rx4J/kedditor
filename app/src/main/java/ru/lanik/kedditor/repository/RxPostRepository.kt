@@ -28,9 +28,9 @@ class RxPostRepository(
                 val postList = data.data.children.toListPost()
                 postFetchData.onNext(
                     PostFetch(
-                        postSrc = source,
+                        source = source,
                         posts = postList,
-                        isUpdate = postFetchData.value?.postSrc == source,
+                        isUpdate = postFetchData.value?.source == source,
                     ),
                 )
             }, { error ->
