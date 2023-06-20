@@ -1,5 +1,6 @@
 package ru.lanik.kedditor.repository
 
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.ReplaySubject
 import ru.lanik.kedditor.model.fetch.SubredditFetch
@@ -10,6 +11,8 @@ import ru.lanik.kedditor.utils.extension.fixAuth
 import ru.lanik.network.api.SubredditsAPI
 import ru.lanik.network.constants.ApiBaseConst
 import ru.lanik.network.extension.toListSubreddit
+import ru.lanik.network.extension.toSubreddit
+import ru.lanik.network.models.Subreddit
 
 class RxSubredditsRepository(
     private val subredditsAPI: SubredditsAPI,
@@ -31,11 +34,18 @@ class RxSubredditsRepository(
                     SubredditFetch(
                         source = source,
                         subredditList = subredditList,
-                    )
+                    ),
                 )
             }, { error ->
                 handleError(error)
             }).also { compositeDisposable.add(it) }
+    }
+
+    override fun getSubredditInfo(source: SubredditSource): Single<Subreddit> {
+        val direct = source.mainSrc
+        return subredditsAPI.getSubredditInfo(direct, auth = "".fixAuth(false)).map {
+            return@map it.toSubreddit()
+        }
     }
 
     override fun getSubredditsByName(
@@ -56,7 +66,7 @@ class RxSubredditsRepository(
                         source = SubredditSource(query),
                         subredditList = subredditList,
                         isSearch = true,
-                    )
+                    ),
                 )
             }, { error ->
                 handleError(error)
