@@ -110,9 +110,10 @@ fun PostViewItem(
     onDirDown: (String) -> Unit = {},
 ) {
     val iconUrl = remember { mutableStateOf("") }
+    val compositeDisposable = CompositeDisposable()
     fetchSubImage(post.name).subscribe({
         iconUrl.value = it
-    }, {}).addTo(CompositeDisposable())
+    }, {}).addTo(compositeDisposable)
     val defaultIconUnit = @Composable {
         Image(
             bitmap = ImageBitmap.imageResource(id = R.drawable.reddit_icon),
@@ -145,6 +146,9 @@ fun PostViewItem(
                     },
                     error = {
                         defaultIconUnit()
+                    },
+                    onSuccess = {
+                        compositeDisposable.clear()
                     },
                     modifier = Modifier
                         .size(24.dp)
