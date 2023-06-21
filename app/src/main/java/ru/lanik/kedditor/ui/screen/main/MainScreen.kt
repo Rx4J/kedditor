@@ -126,7 +126,7 @@ fun MainScreen(
                     InfinityPostView(
                         posts = viewState.posts,
                         isNewPath = viewState.isLoading,
-                        onLoadMore = viewModel::fetchPosts,
+                        //onLoadMore = viewModel::fetchPosts,
                         fetchSubImage = viewModel::getSubredditImageUrl,
                     )
                 }
