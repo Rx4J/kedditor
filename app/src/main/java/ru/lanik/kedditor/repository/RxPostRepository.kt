@@ -39,7 +39,6 @@ class RxPostRepository(
     }
 
     override fun handleError(error: Throwable) {
-        // TODO: Processing error
         postFetchData.onError(error)
     }
 }

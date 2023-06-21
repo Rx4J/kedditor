@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import ru.lanik.kedditor.R
 import ru.lanik.kedditor.model.ActionVariant
+import ru.lanik.kedditor.ui.helper.ErrorHandlerView
 import ru.lanik.kedditor.ui.helper.InfinityPostView
 import ru.lanik.kedditor.ui.helper.SubredditRow
 import ru.lanik.kedditor.ui.theme.KedditorTheme
@@ -117,14 +118,18 @@ fun MainScreen(
                     onMenuClick = { openDrawer() },
                     onMoreClick = { },
                 )
-                InfinityPostView(
-                    surfaceColor = KedditorTheme.colors.primaryBackground,
+                ErrorHandlerView(
+                    errorState = viewState.errorState,
+                    loadingState = viewState.posts == null,
                     modifier = Modifier.weight(1f),
-                    posts = viewState.posts,
-                    isNewPath = viewState.isLoading,
-                    onLoadMore = viewModel::fetchPosts,
-                    fetchSubImage = viewModel::getSubredditImageUrl,
-                )
+                ) {
+                    InfinityPostView(
+                        posts = viewState.posts,
+                        isNewPath = viewState.isLoading,
+                        onLoadMore = viewModel::fetchPosts,
+                        fetchSubImage = viewModel::getSubredditImageUrl,
+                    )
+                }
                 BottomActionBar(
                     actionList = listOf(
                         ActionVariant(
