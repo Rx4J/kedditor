@@ -1,15 +1,18 @@
 package ru.lanik.kedditor.ui.screen.sublist
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import ru.lanik.kedditor.constants.DefaultError
 import ru.lanik.kedditor.model.SublistModel
 import ru.lanik.kedditor.model.source.SubredditSource
 import ru.lanik.kedditor.repository.SubredditsRepository
 import ru.lanik.network.constants.DefaultSubredditSource
+import java.net.UnknownHostException
 
 class SublistViewModel(
     private val compositeDisposable: CompositeDisposable,
@@ -21,18 +24,25 @@ class SublistViewModel(
         mainSrc = initSource,
     )
     private val _sublistViewState: MutableStateFlow<SublistModel> by lazy {
-        val data = MutableStateFlow(SublistModel())
-        subredditsRepository.subredditFetchData.subscribe { newValue ->
+        val data = MutableStateFlow(SublistModel(isLoading = true))
+        subredditsRepository.subredditFetchData.subscribe({ newValue ->
             if (newValue.isSearch) {
                 data.value = data.value.copy(
                     subredditSearch = newValue.subredditList,
+                    errorState = DefaultError.NO,
+                    isLoading = false,
                 )
             } else {
                 data.value = data.value.copy(
                     subreddits = newValue.subredditList,
+                    errorState = DefaultError.NO,
+                    isLoading = false,
                 )
             }
-        }.also { compositeDisposable.add(it) }
+        }, {
+            onError(it)
+            data.value.isLoading = false
+        }).also { compositeDisposable.add(it) }
         return@lazy data
     }
     val sublistViewState: StateFlow<SublistModel> = _sublistViewState.asStateFlow()
@@ -51,10 +61,11 @@ class SublistViewModel(
     }
 
     fun onNavigateBack() {
+        Log.e("Deb", navController.backQueue.size.toString())
         navController.navigateUp()
     }
 
-    fun fetchPosts(
+    fun fetchSubreddits(
         newSource: DefaultSubredditSource? = null,
     ) {
         newSource?.let {
@@ -69,6 +80,22 @@ class SublistViewModel(
             }
         }
         subredditsRepository.fetchSubreddits(defaultPath, afterId)
+    }
+
+    private fun onError(error: Throwable) {
+        if (error is UnknownHostException) {
+            setErrorType(DefaultError.NO_INTERNET)
+        } else if (error.message!!.contains("HTTP 404")) {
+            setErrorType(DefaultError.UNKNOWN_HOST)
+        } else if (error.message!!.contains("HTTP 403")) {
+            setErrorType(DefaultError.PRIVATE)
+        } else { error.printStackTrace() }
+    }
+
+    private fun setErrorType(errorType: DefaultError?) {
+        if (_sublistViewState.value.errorState != errorType) {
+            _sublistViewState.value.errorState = errorType
+        }
     }
 
     override fun onCleared() {

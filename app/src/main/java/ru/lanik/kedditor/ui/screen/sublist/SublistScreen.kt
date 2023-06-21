@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import ru.lanik.kedditor.R
 import ru.lanik.kedditor.ui.helper.CustomPaddingTextField
 import ru.lanik.kedditor.ui.helper.CustomTextFieldColors
+import ru.lanik.kedditor.ui.helper.ErrorHandlerView
 import ru.lanik.kedditor.ui.helper.SubredditRow
 import ru.lanik.kedditor.ui.theme.KedditorTheme
 import ru.lanik.kedditor.ui.theme.SetNavigationBarColor
@@ -56,7 +57,7 @@ fun SublistScreen(
         ) {
             TopSublistScreenBar(
                 text = searchVal.value,
-                isLoading = viewState.subreddits == null,
+                isLoading = viewState.isLoading,
                 onTextChange = {
                     searchVal.value = it
                     viewModel.onSearching(it)
@@ -64,27 +65,33 @@ fun SublistScreen(
                 onBackClicked = viewModel::onNavigateBack,
             )
             Spacer(modifier = Modifier.height(4.dp))
-            LazyColumn {
-                if (searchVal.value.isNotEmpty()) {
-                    viewState.subredditSearch?.forEach {
-                        item {
-                            SubredditRow(
-                                subredditName = it.name,
-                                subredditSubs = it.subscribers ?: 0,
-                                subredditIcon = it.imageUrl,
-                                onClick = { },
-                            )
+            ErrorHandlerView(
+                errorState = viewState.errorState,
+                loadingState = viewState.subreddits == null,
+                modifier = Modifier.weight(1f),
+            ) {
+                LazyColumn {
+                    if (searchVal.value.isNotEmpty()) {
+                        viewState.subredditSearch?.forEach {
+                            item {
+                                SubredditRow(
+                                    subredditName = it.name,
+                                    subredditSubs = it.subscribers ?: 0,
+                                    subredditIcon = it.imageUrl,
+                                    onClick = { },
+                                )
+                            }
                         }
-                    }
-                } else {
-                    viewState.subreddits?.forEach {
-                        item {
-                            SubredditRow(
-                                subredditName = it.name,
-                                subredditSubs = it.subscribers ?: 0,
-                                subredditIcon = it.imageUrl,
-                                onClick = { },
-                            )
+                    } else {
+                        viewState.subreddits?.forEach {
+                            item {
+                                SubredditRow(
+                                    subredditName = it.name,
+                                    subredditSubs = it.subscribers ?: 0,
+                                    subredditIcon = it.imageUrl,
+                                    onClick = { },
+                                )
+                            }
                         }
                     }
                 }

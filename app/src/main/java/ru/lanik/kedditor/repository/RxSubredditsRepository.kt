@@ -74,7 +74,6 @@ class RxSubredditsRepository(
     }
 
     override fun handleError(error: Throwable) {
-        // TODO: Processing error
         subredditFetchData.onError(error)
     }
 }
