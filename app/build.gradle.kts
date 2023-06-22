@@ -83,6 +83,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.fragment.ktx)
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
     implementation(libs.dagger.hilt.android)
