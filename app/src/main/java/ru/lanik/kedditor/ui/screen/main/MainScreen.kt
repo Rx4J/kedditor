@@ -391,7 +391,6 @@ fun BottomActionBar(
     modifier: Modifier = Modifier,
 ) {
     Surface(
-        shape = KedditorTheme.shapes.cornersStyle,
         color = KedditorTheme.colors.primaryBackground,
         tonalElevation = 12.dp,
         shadowElevation = 12.dp,
