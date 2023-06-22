@@ -1,14 +1,15 @@
 package ru.lanik.kedditor.ui.screen.sublist
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.lanik.kedditor.constants.DefaultError
 import ru.lanik.kedditor.model.SublistModel
+import ru.lanik.kedditor.model.fetch.SubredditFetch
 import ru.lanik.kedditor.model.source.SubredditSource
 import ru.lanik.kedditor.repository.SubredditsRepository
 import ru.lanik.network.constants.DefaultSubredditSource
@@ -26,23 +27,11 @@ class SublistViewModel(
     private val _sublistViewState: MutableStateFlow<SublistModel> by lazy {
         val data = MutableStateFlow(SublistModel(isLoading = true))
         subredditsRepository.subredditFetchData.subscribe({ newValue ->
-            if (newValue.isSearch) {
-                data.value = data.value.copy(
-                    subredditSearch = newValue.subredditList,
-                    errorState = DefaultError.NO,
-                    isLoading = false,
-                )
-            } else {
-                data.value = data.value.copy(
-                    subreddits = newValue.subredditList,
-                    errorState = DefaultError.NO,
-                    isLoading = false,
-                )
-            }
+            data.value = onSubredditSubscribe(newValue)
         }, {
             onError(it)
             data.value.isLoading = false
-        }).also { compositeDisposable.add(it) }
+        }).addTo(compositeDisposable)
         return@lazy data
     }
     val sublistViewState: StateFlow<SublistModel> = _sublistViewState.asStateFlow()
@@ -61,7 +50,6 @@ class SublistViewModel(
     }
 
     fun onNavigateBack() {
-        Log.e("Deb", navController.backQueue.size.toString())
         navController.navigateUp()
     }
 
@@ -74,12 +62,21 @@ class SublistViewModel(
             }
         }
         var afterId = ""
-        sublistViewState.value.subreddits?.let {
-            if (it.isNotEmpty() && newSource == null) {
+        _sublistViewState.value.subreddits?.let {
+            if (it.isNotEmpty() && !_sublistViewState.value.isLoading) {
                 afterId = it.last().id
             }
         }
         subredditsRepository.fetchSubreddits(defaultPath, afterId)
+    }
+
+    private fun onSubredditSubscribe(newValue: SubredditFetch): SublistModel {
+        val newList = if (newValue.isSearch) newValue.subredditList else newValue.subredditList
+        return SublistModel(
+            subreddits = newList,
+            errorState = DefaultError.NO,
+            isLoading = false,
+        )
     }
 
     private fun onError(error: Throwable) {

@@ -21,7 +21,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -70,7 +69,7 @@ fun InfinityPostView(
     modifier: Modifier = Modifier,
     backgroundColor: Color = KedditorTheme.colors.primaryBackground,
     fetchSubImage: (String) -> Single<String>,
-    posts: SnapshotStateList<Post>? = null,
+    posts: List<Post>? = null,
     isNewPath: Boolean = false,
     onLoadMore: () -> Unit = {},
 ) {
