@@ -43,6 +43,7 @@ import ru.lanik.kedditor.ui.theme.SetStatusBarColor
 @Composable
 fun SublistScreen(
     viewModel: SublistViewModel,
+    onFragmentResult: (String) -> Unit,
 ) {
     val searchVal = remember { mutableStateOf("") }
     val viewState by viewModel.sublistViewState.collectAsState()
@@ -78,7 +79,10 @@ fun SublistScreen(
                                     subredditName = it.name,
                                     subredditSubs = it.subscribers ?: 0,
                                     subredditIcon = it.imageUrl,
-                                    onClick = { },
+                                    onClick = {
+                                        onFragmentResult(it)
+                                        viewModel.onNavigateBack()
+                                    },
                                 )
                             }
                         }
@@ -89,7 +93,10 @@ fun SublistScreen(
                                     subredditName = it.name,
                                     subredditSubs = it.subscribers ?: 0,
                                     subredditIcon = it.imageUrl,
-                                    onClick = { },
+                                    onClick = {
+                                        onFragmentResult(it)
+                                        viewModel.onNavigateBack()
+                                    },
                                 )
                             }
                         }

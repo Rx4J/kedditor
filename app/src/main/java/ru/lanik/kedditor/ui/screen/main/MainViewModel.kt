@@ -147,13 +147,17 @@ class MainViewModel(
 
     private fun setIsLoading(isLoading: Boolean) {
         if (_mainViewState.value.isLoading != isLoading) {
-            _mainViewState.value.isLoading = isLoading
+            _mainViewState.value = _mainViewState.value.copy(
+                isLoading = isLoading,
+            )
         }
     }
 
     private fun setErrorType(errorType: DefaultError?) {
         if (_mainViewState.value.errorState != errorType) {
-            _mainViewState.value.errorState = errorType
+            _mainViewState.value = _mainViewState.value.copy(
+                errorState = errorType,
+            )
         }
     }
 
