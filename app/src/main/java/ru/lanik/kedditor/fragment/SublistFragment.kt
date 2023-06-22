@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.lanik.kedditor.ui.screen.sublist.SublistScreen
@@ -30,6 +32,10 @@ class SublistFragment : Fragment() {
                         viewModel = viewModelFactory.getViewModel(
                             navController = findNavController(),
                         ),
+                        onFragmentResult = {
+                            setFragmentResult("sublist_fragment",
+                                bundleOf("subreddit" to it))
+                        }
                     )
                 }
             }
