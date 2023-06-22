@@ -19,7 +19,7 @@ class RxSubredditsRepository(
     private val schedulerPolicy: SchedulerPolicy,
     private val compositeDisposable: CompositeDisposable,
 ) : SubredditsRepository.Reactive {
-    override val subredditFetchData: ReplaySubject<SubredditFetch> = ReplaySubject.create()
+    override val subredditFetchData: ReplaySubject<SubredditFetch> = ReplaySubject.create(1)
 
     override fun fetchSubreddits(
         source: SubredditSource,

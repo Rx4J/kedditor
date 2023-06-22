@@ -30,7 +30,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun proviveRxSubredditsRepository(
+    fun provideRxSubredditsRepository(
         subredditsAPI: SubredditsAPI,
         schedulerPolicy: SchedulerPolicy,
         compositeDisposable: CompositeDisposable,
@@ -38,7 +38,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun proviveRxPostRepository(
+    fun provideRxPostRepository(
         postAPI: PostAPI,
         schedulerPolicy: SchedulerPolicy,
         compositeDisposable: CompositeDisposable,
