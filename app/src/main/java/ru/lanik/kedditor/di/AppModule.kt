@@ -40,9 +40,10 @@ class AppModule {
     @Singleton
     fun provideRxPostRepository(
         postAPI: PostAPI,
+        subredditsAPI: SubredditsAPI,
         schedulerPolicy: SchedulerPolicy,
         compositeDisposable: CompositeDisposable,
-    ): PostRepository.Reactive = RxPostRepository(postAPI, schedulerPolicy, compositeDisposable)
+    ): PostRepository.Reactive = RxPostRepository(postAPI, subredditsAPI, schedulerPolicy, compositeDisposable)
 
     @Provides
     @Singleton
