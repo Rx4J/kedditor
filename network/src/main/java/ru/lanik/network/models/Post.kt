@@ -25,6 +25,7 @@ data class Post(
     val isVideo: Boolean,
     val likedByUser: Boolean?,
     var dir: Int,
+    var iconUrl: String = "",
 ) : ListItem {
     fun getDate(): String {
         try {

@@ -32,7 +32,6 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import ru.lanik.kedditor.R
@@ -68,7 +67,6 @@ fun InfiniteListHandler(
 fun InfinityPostView(
     modifier: Modifier = Modifier,
     backgroundColor: Color = KedditorTheme.colors.primaryBackground,
-    fetchSubImage: (String) -> Single<String>,
     posts: List<Post>? = null,
     isNewPath: Boolean = false,
     onLoadMore: () -> Unit = {},
@@ -86,7 +84,6 @@ fun InfinityPostView(
                 items(notNull) {
                     PostViewItem(
                         post = it,
-                        fetchSubImage = fetchSubImage,
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                 }

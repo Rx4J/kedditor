@@ -20,8 +20,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,9 +32,6 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
 import ru.lanik.kedditor.R
 import ru.lanik.kedditor.ui.theme.KedditorTheme
 import ru.lanik.kedditor.utils.extension.toFormatStr
@@ -105,15 +100,9 @@ fun SubredditRow(
 @Composable
 fun PostViewItem(
     post: Post,
-    fetchSubImage: (String) -> Single<String>,
     onDirUp: (String) -> Unit = {},
     onDirDown: (String) -> Unit = {},
 ) {
-    val iconUrl = remember { mutableStateOf("") }
-    val compositeDisposable = CompositeDisposable()
-    fetchSubImage(post.name).subscribe({
-        iconUrl.value = it
-    }, {}).addTo(compositeDisposable)
     val defaultIconUnit = @Composable {
         Image(
             bitmap = ImageBitmap.imageResource(id = R.drawable.reddit_icon),
@@ -137,7 +126,7 @@ fun PostViewItem(
             ) {
                 SubcomposeAsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(iconUrl.value)
+                        .data(post.iconUrl)
                         .build(),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
@@ -146,9 +135,6 @@ fun PostViewItem(
                     },
                     error = {
                         defaultIconUnit()
-                    },
-                    onSuccess = {
-                        compositeDisposable.clear()
                     },
                     modifier = Modifier
                         .size(24.dp)

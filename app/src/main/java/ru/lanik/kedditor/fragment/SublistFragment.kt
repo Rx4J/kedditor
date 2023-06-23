@@ -33,9 +33,11 @@ class SublistFragment : Fragment() {
                             navController = findNavController(),
                         ),
                         onFragmentResult = {
-                            setFragmentResult("sublist_fragment",
-                                bundleOf("subreddit" to it))
-                        }
+                            setFragmentResult(
+                                "sublist_fragment",
+                                bundleOf("subreddit" to it),
+                            )
+                        },
                     )
                 }
             }
