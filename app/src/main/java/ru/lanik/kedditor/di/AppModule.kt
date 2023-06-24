@@ -1,6 +1,8 @@
 package ru.lanik.kedditor.di
 
 import android.content.Context
+import androidx.datastore.core.CorruptionException
+import androidx.datastore.core.Serializer
 import androidx.datastore.rxjava3.RxDataStore
 import androidx.datastore.rxjava3.RxDataStoreBuilder
 import dagger.Module
@@ -10,8 +12,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
 import ru.lanik.kedditor.model.SettingsModel
-import ru.lanik.kedditor.model.SettingsModelSerializer
 import ru.lanik.kedditor.repository.PostRepository
 import ru.lanik.kedditor.repository.RxPostRepository
 import ru.lanik.kedditor.repository.RxSettingsManager
@@ -25,6 +28,8 @@ import ru.lanik.kedditor.utils.NetworkScheduler
 import ru.lanik.kedditor.utils.SchedulerPolicy
 import ru.lanik.network.api.PostAPI
 import ru.lanik.network.api.SubredditsAPI
+import java.io.InputStream
+import java.io.OutputStream
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -42,10 +47,11 @@ class AppModule {
     @Singleton
     fun provideSettingsDataStore(
         @ApplicationContext context: Context,
+        settingsModelSerializer: Serializer<SettingsModel>,
     ): RxDataStore<SettingsModel> = RxDataStoreBuilder(
         context = context,
         fileName = "settings.json",
-        serializer = SettingsModelSerializer,
+        serializer = settingsModelSerializer,
     ).build()
 
     @Provides
@@ -53,6 +59,28 @@ class AppModule {
     fun provideSettingsStateFlow(
         settingsManager: SettingsManager.Reactive,
     ): StateFlow<SettingsModel> = settingsManager.getStateFlow()
+
+    @Provides
+    @Singleton
+    fun provideSettingsModelSerializer(): Serializer<SettingsModel> = object : Serializer<SettingsModel> {
+        override val defaultValue: SettingsModel = SettingsModel()
+        override suspend fun readFrom(input: InputStream): SettingsModel {
+            try {
+                return Json.decodeFromString(
+                    SettingsModel.serializer(),
+                    input.readBytes().decodeToString(),
+                )
+            } catch (serialization: SerializationException) {
+                throw CorruptionException("Unable to read SettingsModel", serialization)
+            }
+        }
+        override suspend fun writeTo(t: SettingsModel, output: OutputStream) {
+            output.write(
+                Json.encodeToString(SettingsModel.serializer(), t)
+                    .encodeToByteArray(),
+            )
+        }
+    }
 
     @Provides
     @Singleton
