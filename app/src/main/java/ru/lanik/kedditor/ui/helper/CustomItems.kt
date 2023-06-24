@@ -1,7 +1,10 @@
 package ru.lanik.kedditor.ui.helper
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,11 +18,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,10 +37,12 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import ru.lanik.kedditor.R
+import ru.lanik.kedditor.model.MenuItemModel
 import ru.lanik.kedditor.ui.theme.KedditorTheme
 import ru.lanik.kedditor.utils.extension.toFormatStr
 import ru.lanik.network.models.Post
@@ -214,6 +224,92 @@ fun PostViewItem(
                         modifier = Modifier.rotate(270f),
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun MenuItem(
+    model: MenuItemModel,
+    onItemSelected: (Int) -> Unit = {},
+) {
+    val isDropdownOpen = remember { mutableStateOf(false) }
+    val currentPosition = remember { mutableStateOf(model.currentIndex) }
+
+    Column {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Row(
+                Modifier
+                    .clickable {
+                        isDropdownOpen.value = true
+                    }
+                    .padding(KedditorTheme.shapes.generalPadding)
+                    .background(KedditorTheme.colors.primaryBackground),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = KedditorTheme.shapes.generalPadding),
+                    text = model.title,
+                    style = KedditorTheme.typography.body,
+                    color = KedditorTheme.colors.primaryText,
+                )
+
+                Text(
+                    text = model.values[currentPosition.value],
+                    style = KedditorTheme.typography.body,
+                    color = KedditorTheme.colors.secondaryText,
+                )
+
+                Icon(
+                    modifier = Modifier
+                        .padding(start = KedditorTheme.shapes.generalPadding / 4)
+                        .size(18.dp)
+                        .align(Alignment.CenterVertically),
+                    painter = painterResource(id = R.drawable.ic_baseline_arrow),
+                    contentDescription = "Arrow",
+                    tint = KedditorTheme.colors.secondaryText,
+                )
+            }
+
+            Divider(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .align(Alignment.BottomStart),
+                thickness = 0.5.dp,
+                color = KedditorTheme.colors.secondaryText.copy(
+                    alpha = 0.3f,
+                ),
+            )
+        }
+        DropdownMenu(
+            expanded = isDropdownOpen.value,
+            onDismissRequest = {
+                isDropdownOpen.value = false
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(KedditorTheme.colors.primaryBackground),
+        ) {
+            model.values.forEachIndexed { index, value ->
+                DropdownMenuItem(
+                    onClick = {
+                        currentPosition.value = index
+                        isDropdownOpen.value = false
+                        onItemSelected(index)
+                    },
+                    text = {
+                        Text(
+                            text = value,
+                            style = KedditorTheme.typography.body,
+                            color = KedditorTheme.colors.primaryText,
+                        )
+                    },
+                )
             }
         }
     }
