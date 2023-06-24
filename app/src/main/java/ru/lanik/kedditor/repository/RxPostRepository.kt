@@ -1,7 +1,7 @@
 package ru.lanik.kedditor.repository
 
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.subjects.ReplaySubject
 import kotlinx.coroutines.flow.StateFlow
 import ru.lanik.kedditor.model.SettingsModel
@@ -14,7 +14,6 @@ import ru.lanik.network.api.PostAPI
 import ru.lanik.network.api.SubredditsAPI
 import ru.lanik.network.extension.toListPost
 import ru.lanik.network.extension.toSubreddit
-import ru.lanik.network.models.Post
 
 class RxPostRepository(
     private val postAPI: PostAPI,
@@ -32,18 +31,14 @@ class RxPostRepository(
         val direct = source.toPath().fixAuth(settingsStateFlow.value.isAuth)
         postAPI.getPosts(direct, after)
             .applySchedulerPolicy(schedulerPolicy)
-            .concatMap { dto ->
+            .map { dto ->
                 val postList = dto.data.children.toListPost()
-                val postsWithImage = postList.map { post ->
-                    subredditsAPI.getSubredditInfo(post.name, "".fixAuth(settingsStateFlow.value.isAuth)).map { info ->
-                        post.copy(
-                            iconUrl = info.toSubreddit().imageUrl ?: "",
-                        )
-                    }
+                postList.forEach { post ->
+                    subredditsAPI.getSubredditInfo(post.name, "".fixAuth(settingsStateFlow.value.isAuth)).subscribe({
+                        post.iconUrl.value = it.toSubreddit().imageUrl ?: ""
+                    }, {}).addTo(compositeDisposable)
                 }
-                return@concatMap Single.zip(postsWithImage) { updatedPosts ->
-                    updatedPosts.map { it as Post }
-                }
+                return@map postList
             }
             .subscribe({ data ->
                 postFetchData.onNext(

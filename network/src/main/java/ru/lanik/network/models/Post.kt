@@ -1,5 +1,6 @@
 package ru.lanik.network.models
 
+import kotlinx.coroutines.flow.MutableStateFlow
 import ru.lanik.network.extension.toFullLong
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -25,7 +26,7 @@ data class Post(
     val isVideo: Boolean,
     val likedByUser: Boolean?,
     var dir: Int,
-    var iconUrl: String = "",
+    val iconUrl: MutableStateFlow<String> = MutableStateFlow(""),
 ) : ListItem {
     fun getDate(): String {
         try {
