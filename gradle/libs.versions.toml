@@ -25,6 +25,7 @@ constraintlayout-ver = "2.1.4"
 appcompat-ver = "1.6.1"
 coil-ver = "2.4.0"
 fragment-ver = "1.5.7"
+datastore-ver = "1.0.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -63,6 +64,8 @@ navigation-ui = { group = "androidx.navigation", name = "navigation-ui-ktx", ver
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil-ver" }
 coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil-ver" }
 fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment-ver" }
+datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore-ver" }
+datastore-rx = { group = "androidx.datastore", name = "datastore-rxjava3", version.ref = "datastore-ver" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

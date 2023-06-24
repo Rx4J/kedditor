@@ -7,6 +7,7 @@ plugins {
 
     // Is third party plugins
     alias(libs.plugins.kapt)
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ktlintPlugin)
     alias(libs.plugins.daggerPlugin)
 }
@@ -76,6 +77,7 @@ dependencies {
     debugImplementation(libs.ui.test.manifest)
 
     // Is third party dependencies
+    implementation(libs.json.serialization)
     implementation(libs.rxjava3.rxjava)
     implementation(libs.rxjava3.rxandroid)
     implementation(libs.rxjava3.rxkotlin)
@@ -86,6 +88,8 @@ dependencies {
     implementation(libs.fragment.ktx)
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
+    implementation(libs.datastore)
+    implementation(libs.datastore.rx)
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
     testImplementation(libs.dagger.hilt.android.testing)
