@@ -11,6 +11,30 @@
     <string name="sublist_fragment_name">Sublist</string>
     <string name="sublist_search_placeholder">Go to…</string>
 
+    <string name="settings_fragment_name">Settings</string>
+    <string name="settings_action_enable_dart_theme">Dark Theme</string>
+    <string name="settings_action_text_size">Text Size</string>
+    <string name="settings_action_padding_size">Padding Size</string>
+    <string name="settings_action_cornel_style">Corner Style</string>
+    <string name="settings_action_default_post_source">Default Post Source</string>
+    <string name="settings_action_default_post_sort">Default Post Sort</string>
+    <string name="settings_action_default_subreddit_source">Default Subreddit Source</string>
+    <string name="settings_option_size_small">Small</string>
+    <string name="settings_option_size_medium">Medium</string>
+    <string name="settings_option_size_big">Big</string>
+    <string name="settings_option_shape_rounded">Rounded</string>
+    <string name="settings_option_shape_flat">Flat</string>
+    <string name="settings_option_post_source_popular">Popular</string>
+    <string name="settings_option_post_source_all">All</string>
+    <string name="settings_option_post_sort_hot">Hot</string>
+    <string name="settings_option_post_sort_new">New</string>
+    <string name="settings_option_post_sort_top">Top</string>
+    <string name="settings_option_post_sort_rising">Rising</string>
+    <string name="settings_option_subreddit_source_default">Default</string>
+    <string name="settings_option_subreddit_source_popular">Popular</string>
+    <string name="settings_option_subreddit_source_gold">Gold</string>
+    <string name="settings_option_subreddit_source_new">New</string>
+
     <string name="error_no_internet">Where\'s your internet connection?</string>
     <string name="error_unknown_host">Something wrong with internet connection</string>
     <string name="error_other">Ooops, something wrong is happened</string>

@@ -5,20 +5,26 @@
     app:startDestination="@id/MainFragment">
 
     <fragment
-        android:id="@+id/SublistFragment"
-        android:name="ru.lanik.kedditor.fragment.SublistFragment"
-        android:label="@string/sublist_fragment_name" >
-        <action
-            android:id="@+id/action_sub_to_main"
-            app:destination="@id/SublistFragment" />
-    </fragment>
-
-    <fragment
         android:id="@+id/MainFragment"
         android:name="ru.lanik.kedditor.fragment.MainFragment"
         android:label="@string/main_fragment_name" >
         <action
             android:id="@+id/action_main_to_sub"
             app:destination="@id/SublistFragment" />
+        <action
+            android:id="@+id/action_main_to_sett"
+            app:destination="@id/SettingsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/SublistFragment"
+        android:name="ru.lanik.kedditor.fragment.SublistFragment"
+        android:label="@string/sublist_fragment_name" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/SettingsFragment"
+        android:name="ru.lanik.kedditor.fragment.SettingsFragment"
+        android:label="@string/settings_fragment_name" >
     </fragment>
 </navigation>

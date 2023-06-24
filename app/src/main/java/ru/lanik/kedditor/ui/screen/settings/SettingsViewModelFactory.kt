@@ -1,24 +1,18 @@
-package ru.lanik.kedditor.ui.screen.main
+package ru.lanik.kedditor.ui.screen.settings
 
 import androidx.navigation.NavController
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import ru.lanik.kedditor.repository.PostRepository
 import ru.lanik.kedditor.repository.SettingsManager
-import ru.lanik.kedditor.repository.SubredditsRepository
 
-class MainViewModelFactory(
+class SettingsViewModelFactory(
     private val compositeDisposable: CompositeDisposable,
-    private val postRepository: PostRepository.Reactive,
-    private val subredditsRepository: SubredditsRepository.Reactive,
 ) {
     fun getViewModel(
         navController: NavController,
         settingsManager: SettingsManager.Reactive,
-    ): MainViewModel {
-        return MainViewModel(
+    ): SettingsViewModel {
+        return SettingsViewModel(
             compositeDisposable = compositeDisposable,
-            postRepository = postRepository,
-            subredditsRepository = subredditsRepository,
             navController = navController,
             settingsManager = settingsManager,
         )

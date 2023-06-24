@@ -37,8 +37,6 @@ import ru.lanik.kedditor.ui.helper.CustomTextFieldColors
 import ru.lanik.kedditor.ui.helper.ErrorHandlerView
 import ru.lanik.kedditor.ui.helper.SubredditRow
 import ru.lanik.kedditor.ui.theme.KedditorTheme
-import ru.lanik.kedditor.ui.theme.SetNavigationBarColor
-import ru.lanik.kedditor.ui.theme.SetStatusBarColor
 
 @Composable
 fun SublistScreen(
@@ -47,8 +45,6 @@ fun SublistScreen(
 ) {
     val searchVal = remember { mutableStateOf("") }
     val viewState by viewModel.sublistViewState.collectAsState()
-    SetStatusBarColor(KedditorTheme.colors.secondaryBackground)
-    SetNavigationBarColor(KedditorTheme.colors.primaryBackground)
     Surface(
         color = KedditorTheme.colors.primaryBackground,
     ) {

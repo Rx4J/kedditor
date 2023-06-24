@@ -11,6 +11,7 @@ import ru.lanik.kedditor.constants.DefaultError
 import ru.lanik.kedditor.model.SublistModel
 import ru.lanik.kedditor.model.fetch.SubredditFetch
 import ru.lanik.kedditor.model.source.SubredditSource
+import ru.lanik.kedditor.repository.SettingsManager
 import ru.lanik.kedditor.repository.SubredditsRepository
 import ru.lanik.network.constants.DefaultSubredditSource
 import java.net.UnknownHostException
@@ -19,10 +20,11 @@ class SublistViewModel(
     private val compositeDisposable: CompositeDisposable,
     private val subredditsRepository: SubredditsRepository.Reactive,
     private val navController: NavController,
-    initSource: String,
+    private val settingsManager: SettingsManager.Reactive,
 ) : ViewModel() {
+    private val settingsStateFlow = settingsManager.getStateFlow()
     private var defaultPath = SubredditSource(
-        mainSrc = initSource,
+        mainSrc = settingsStateFlow.value.defaultSubredditSource.name.lowercase(),
     )
     private val _sublistViewState: MutableStateFlow<SublistModel> by lazy {
         val data = MutableStateFlow(SublistModel(isLoading = true))

@@ -34,8 +34,8 @@ private fun getActivityContext(): Activity {
 @Composable
 fun SetStatusBarColor(
     color: Color,
+    isDarkMode: Boolean = isSystemInDarkTheme(),
 ) {
-    val darkTheme = isSystemInDarkTheme()
     val view = LocalView.current
     val activityContext = getActivityContext()
     if (!view.isInEditMode) {
@@ -43,7 +43,7 @@ fun SetStatusBarColor(
             val window = activityContext.window
             window.statusBarColor = color.toArgb()
             WindowCompat.getInsetsController(window, view)
-                .isAppearanceLightStatusBars = !darkTheme
+                .isAppearanceLightStatusBars = !isDarkMode
         }
     }
 }
@@ -51,8 +51,8 @@ fun SetStatusBarColor(
 @Composable
 fun SetNavigationBarColor(
     color: Color,
+    isDarkMode: Boolean = isSystemInDarkTheme(),
 ) {
-    val darkTheme = isSystemInDarkTheme()
     val view = LocalView.current
     val activityContext = getActivityContext()
     if (!view.isInEditMode) {
@@ -60,7 +60,7 @@ fun SetNavigationBarColor(
             val window = activityContext.window
             window.navigationBarColor = color.toArgb()
             WindowCompat.getInsetsController(window, view)
-                .isAppearanceLightNavigationBars = !darkTheme
+                .isAppearanceLightNavigationBars = !isDarkMode
         }
     }
 }
