@@ -26,6 +26,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -113,6 +114,7 @@ fun PostViewItem(
     onDirUp: (String) -> Unit = {},
     onDirDown: (String) -> Unit = {},
 ) {
+    val iconState = post.iconUrl.collectAsState()
     val defaultIconUnit = @Composable {
         Image(
             bitmap = ImageBitmap.imageResource(id = R.drawable.reddit_icon),
@@ -136,7 +138,7 @@ fun PostViewItem(
             ) {
                 SubcomposeAsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(post.iconUrl)
+                        .data(iconState.value)
                         .build(),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
