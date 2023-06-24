@@ -53,8 +53,6 @@ import ru.lanik.kedditor.ui.helper.ErrorHandlerView
 import ru.lanik.kedditor.ui.helper.InfinityPostView
 import ru.lanik.kedditor.ui.helper.SubredditRow
 import ru.lanik.kedditor.ui.theme.KedditorTheme
-import ru.lanik.kedditor.ui.theme.SetNavigationBarColor
-import ru.lanik.kedditor.ui.theme.SetStatusBarColor
 import ru.lanik.network.constants.DefaultPostSource
 import ru.lanik.network.models.Subreddit
 
@@ -66,8 +64,6 @@ fun MainScreen(
     val viewState by viewModel.mainViewState.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val drawerScope = rememberCoroutineScope()
-    SetStatusBarColor(KedditorTheme.colors.primaryBackground)
-    SetNavigationBarColor(KedditorTheme.colors.primaryBackground)
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     val closeDrawer = {
@@ -100,7 +96,10 @@ fun MainScreen(
                     viewModel.fetchPosts(DefaultPostSource.ALL.name.lowercase())
                     closeDrawer()
                 },
-                onSettingsClicked = { },
+                onSettingsClicked = {
+                    viewModel.onNavigateTo(R.id.action_main_to_sett)
+                    closeDrawer()
+                },
                 onSubredditClicked = {
                     val newStr = it.lowercase()
                     viewModel.fetchPosts(newStr)

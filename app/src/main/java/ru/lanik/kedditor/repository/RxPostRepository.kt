@@ -3,6 +3,8 @@ package ru.lanik.kedditor.repository
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.ReplaySubject
+import kotlinx.coroutines.flow.StateFlow
+import ru.lanik.kedditor.model.SettingsModel
 import ru.lanik.kedditor.model.fetch.PostFetch
 import ru.lanik.kedditor.model.source.PostSource
 import ru.lanik.kedditor.utils.SchedulerPolicy
@@ -18,6 +20,7 @@ class RxPostRepository(
     private val postAPI: PostAPI,
     private val subredditsAPI: SubredditsAPI,
     private val schedulerPolicy: SchedulerPolicy,
+    private val settingsStateFlow: StateFlow<SettingsModel>,
     private val compositeDisposable: CompositeDisposable,
 ) : PostRepository.Reactive {
     override val postFetchData: ReplaySubject<PostFetch> = ReplaySubject.create(1)
@@ -26,13 +29,13 @@ class RxPostRepository(
         source: PostSource,
         after: String,
     ) {
-        val direct = source.toPath().fixAuth(false)
+        val direct = source.toPath().fixAuth(settingsStateFlow.value.isAuth)
         postAPI.getPosts(direct, after)
             .applySchedulerPolicy(schedulerPolicy)
             .concatMap { dto ->
                 val postList = dto.data.children.toListPost()
                 val postsWithImage = postList.map { post ->
-                    subredditsAPI.getSubredditInfo(post.name, "".fixAuth(false)).map { info ->
+                    subredditsAPI.getSubredditInfo(post.name, "".fixAuth(settingsStateFlow.value.isAuth)).map { info ->
                         post.copy(
                             iconUrl = info.toSubreddit().imageUrl ?: "",
                         )

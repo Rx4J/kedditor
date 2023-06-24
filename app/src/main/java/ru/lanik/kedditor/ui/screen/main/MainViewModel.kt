@@ -14,6 +14,7 @@ import ru.lanik.kedditor.model.fetch.SubredditFetch
 import ru.lanik.kedditor.model.source.PostSource
 import ru.lanik.kedditor.model.source.SubredditSource
 import ru.lanik.kedditor.repository.PostRepository
+import ru.lanik.kedditor.repository.SettingsManager
 import ru.lanik.kedditor.repository.SubredditsRepository
 import ru.lanik.network.constants.DefaultPostSort
 import ru.lanik.network.models.Post
@@ -24,13 +25,12 @@ class MainViewModel(
     private val postRepository: PostRepository.Reactive,
     private val subredditsRepository: SubredditsRepository.Reactive,
     private val navController: NavController,
-    initSort: DefaultPostSort,
-    initSubredditSource: String,
-    initSource: String,
+    private val settingsManager: SettingsManager.Reactive,
 ) : ViewModel() {
+    private val settingsStateFlow = settingsManager.getStateFlow()
     private var defaultPath = PostSource(
-        mainSrc = initSource,
-        sortType = initSort,
+        mainSrc = settingsStateFlow.value.defaultPostSource.name.lowercase(),
+        sortType = settingsStateFlow.value.defaultPostSort,
     )
     private val _mainViewState: MutableStateFlow<PostModel> by lazy {
         val data = MutableStateFlow(PostModel(isLoading = true))
@@ -61,7 +61,7 @@ class MainViewModel(
             postRepository.fetchPosts(defaultPath, "")
         }
         if (mainViewState.value.subreddits == null) {
-            subredditsRepository.fetchSubreddits(SubredditSource(initSubredditSource))
+            subredditsRepository.fetchSubreddits(SubredditSource(settingsStateFlow.value.defaultSubredditSource.name.lowercase()))
         }
     }
 
