@@ -1,8 +1,16 @@
 package ru.lanik.network.extension
 
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.decodeFromJsonElement
+import ru.lanik.network.api.dto.commentsDTO.CommentsDto
+import ru.lanik.network.api.dto.commentsDTO.CommentsListingDto
 import ru.lanik.network.api.dto.postDTO.PostDto
+import ru.lanik.network.api.dto.postDTO.PostListingDto
 import ru.lanik.network.api.dto.subredditDTO.SubredditDto
+import ru.lanik.network.models.Comments
 import ru.lanik.network.models.Post
+import ru.lanik.network.models.PostWithComments
 import ru.lanik.network.models.Subreddit
 
 fun List<SubredditDto>.toListSubreddit(): List<Subreddit> = this.map { item -> item.toSubreddit() }
@@ -46,7 +54,35 @@ fun PostDto.toPost(): Post {
         fallbackUrl = data.media?.redditVideo?.fallbackUrl,
         isVideo = data.isVideo,
         likedByUser = data.likes,
+        thumbnail = data.thumbnail,
         dir = voteDirection,
+    )
+}
+
+fun List<CommentsDto>.toListComments(): List<Comments> = this.map { item -> item.toComments() }
+
+fun CommentsDto.toComments(): Comments {
+    return Comments(
+        id = data.id,
+        name = data.subreddit ?: "",
+        author = data.author,
+        ups = data.ups,
+        utcTimeStamp = data.createdUtc ?: 1.0,
+        commentsBody = data.bodyComments,
+        replies = null,
+    )
+}
+
+fun List<JsonElement>.toPostWithComments(): PostWithComments {
+    val format = Json {
+        ignoreUnknownKeys = true
+    }
+
+    val postDto = format.decodeFromJsonElement<PostListingDto>(first())
+    val commentsDto = format.decodeFromJsonElement<CommentsListingDto>(last())
+    return PostWithComments(
+        post = postDto.data.children.first().toPost(),
+        comments = commentsDto.data.children.toListComments(),
     )
 }
 

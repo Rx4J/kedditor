@@ -1,6 +1,7 @@
 package ru.lanik.network.api
 
 import io.reactivex.rxjava3.core.Single
+import kotlinx.serialization.json.JsonElement
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -12,4 +13,9 @@ interface PostAPI {
         @Path("source") source: String?,
         @Query("after") page: String = "",
     ): Single<PostListingDto>
+
+    @GET("{url}")
+    fun getSinglePost(
+        @Path("url") source: String?,
+    ): Single<List<JsonElement>>
 }
