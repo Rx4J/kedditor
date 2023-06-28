@@ -36,10 +36,13 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import ru.lanik.kedditor.R
@@ -111,9 +114,13 @@ fun SubredditRow(
 @Composable
 fun PostViewItem(
     post: Post,
+    showThumb: Boolean = true,
+    onPostClick: (String) -> Unit = {},
     onDirUp: (String) -> Unit = {},
     onDirDown: (String) -> Unit = {},
 ) {
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp
     val iconState = post.iconUrl.collectAsState()
     val defaultIconUnit = @Composable {
         Image(
@@ -126,6 +133,7 @@ fun PostViewItem(
         color = KedditorTheme.colors.secondaryBackground,
         tonalElevation = 8.dp,
         shadowElevation = 8.dp,
+        modifier = Modifier.clickable { onPostClick(post.permalink) },
     ) {
         Column(
             modifier = Modifier
@@ -166,11 +174,38 @@ fun PostViewItem(
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = post.title,
-                color = KedditorTheme.colors.primaryText,
-                style = KedditorTheme.typography.heading,
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                val hasThumb = post.thumbnail != null && (post.thumbnail?.length ?: 0) > 8
+                val textWidth = if (hasThumb && showThumb) {
+                    Modifier.width(((screenWidth * 10) / 16).dp)
+                } else {
+                    Modifier
+                }
+                Text(
+                    text = post.title,
+                    color = KedditorTheme.colors.primaryText,
+                    style = KedditorTheme.typography.heading.copy(
+                        fontSize = 18.sp,
+                    ),
+                    modifier = textWidth,
+                )
+                if (hasThumb && showThumb) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(post.thumbnail)
+                            .build(),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.width(((screenWidth * 4) / 16).dp),
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+            }
+
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 horizontalArrangement = Arrangement.Start,

@@ -21,6 +21,7 @@ import ru.lanik.kedditor.repository.RxSettingsManager
 import ru.lanik.kedditor.repository.RxSubredditsRepository
 import ru.lanik.kedditor.repository.SettingsManager
 import ru.lanik.kedditor.repository.SubredditsRepository
+import ru.lanik.kedditor.ui.screen.comments.CommentsViewModelFactory
 import ru.lanik.kedditor.ui.screen.main.MainViewModelFactory
 import ru.lanik.kedditor.ui.screen.settings.SettingsViewModelFactory
 import ru.lanik.kedditor.ui.screen.sublist.SublistViewModelFactory
@@ -128,4 +129,11 @@ class AppModule {
     fun provideSettingsViewModelFactory(
         compositeDisposable: CompositeDisposable,
     ): SettingsViewModelFactory = SettingsViewModelFactory(compositeDisposable)
+
+    @Provides
+    @Singleton
+    fun provideCommentsViewModelFactory(
+        compositeDisposable: CompositeDisposable,
+        postRepository: PostRepository.Reactive,
+    ): CommentsViewModelFactory = CommentsViewModelFactory(postRepository, compositeDisposable)
 }

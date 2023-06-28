@@ -1,5 +1,6 @@
 package ru.lanik.kedditor.ui.screen.main
 
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -7,6 +8,7 @@ import io.reactivex.rxjava3.kotlin.addTo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import ru.lanik.kedditor.R
 import ru.lanik.kedditor.constants.DefaultError
 import ru.lanik.kedditor.model.PostModel
 import ru.lanik.kedditor.model.fetch.PostFetch
@@ -18,6 +20,7 @@ import ru.lanik.kedditor.repository.SettingsManager
 import ru.lanik.kedditor.repository.SubredditsRepository
 import ru.lanik.network.constants.DefaultPostSort
 import ru.lanik.network.models.Post
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 class MainViewModel(
@@ -102,6 +105,11 @@ class MainViewModel(
         postRepository.fetchPosts(defaultPath, afterId)
     }
 
+    fun onNavigateToComments(url: String) {
+        val bundle = bundleOf("post_url" to url)
+        navController.navigate(R.id.action_main_to_view, bundle)
+    }
+
     fun onNavigateTo(commandId: Int) {
         navController.navigate(commandId)
     }
@@ -113,6 +121,8 @@ class MainViewModel(
             setErrorType(DefaultError.UNKNOWN_HOST)
         } else if (error.message!!.contains("HTTP 403")) {
             setErrorType(DefaultError.PRIVATE)
+        } else if (error is SocketTimeoutException) {
+            setErrorType(DefaultError.UNKNOWN_HOST)
         } else { error.printStackTrace() }
     }
 

@@ -125,6 +125,9 @@ fun MainScreen(
                     InfinityPostView(
                         posts = viewState.posts,
                         isNewPath = viewState.isLoading,
+                        onPostClick = {
+                            viewModel.onNavigateToComments(it)
+                        },
                         onLoadMore = viewModel::fetchPosts,
                     )
                 }
