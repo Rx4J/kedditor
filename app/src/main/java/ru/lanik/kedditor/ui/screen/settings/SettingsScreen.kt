@@ -1,8 +1,10 @@
 package ru.lanik.kedditor.ui.screen.settings
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
@@ -61,14 +63,17 @@ fun SettingsScreen(
                     }
                 },
                 title = {
-                    Text(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = KedditorTheme.shapes.generalPadding),
-                        text = stringResource(id = R.string.settings_fragment_name),
-                        color = KedditorTheme.colors.primaryText,
-                        style = KedditorTheme.typography.toolbar,
-                    )
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.settings_fragment_name).uppercase(),
+                            color = KedditorTheme.colors.primaryText,
+                            style = KedditorTheme.typography.body,
+                        )
+                    }
                 },
             )
 

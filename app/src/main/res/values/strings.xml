@@ -35,6 +35,8 @@
     <string name="settings_option_subreddit_source_gold">Gold</string>
     <string name="settings_option_subreddit_source_new">New</string>
 
+    <string name="comments_fragment_name">Comments</string>
+
     <string name="error_no_internet">Where\'s your internet connection?</string>
     <string name="error_unknown_host">Something wrong with internet connection</string>
     <string name="error_other">Ooops, something wrong is happened</string>

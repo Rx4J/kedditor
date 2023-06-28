@@ -14,6 +14,7 @@ import ru.lanik.kedditor.model.source.SubredditSource
 import ru.lanik.kedditor.repository.SettingsManager
 import ru.lanik.kedditor.repository.SubredditsRepository
 import ru.lanik.network.constants.DefaultSubredditSource
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 class SublistViewModel(
@@ -88,6 +89,8 @@ class SublistViewModel(
             setErrorType(DefaultError.UNKNOWN_HOST)
         } else if (error.message!!.contains("HTTP 403")) {
             setErrorType(DefaultError.PRIVATE)
+        } else if (error is SocketTimeoutException) {
+            setErrorType(DefaultError.UNKNOWN_HOST)
         } else { error.printStackTrace() }
     }
 

@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_main_to_sett"
             app:destination="@id/SettingsFragment" />
+        <action
+            android:id="@+id/action_main_to_view"
+            app:destination="@id/CommentsFragment" />
     </fragment>
 
     <fragment
@@ -26,5 +29,11 @@
         android:id="@+id/SettingsFragment"
         android:name="ru.lanik.kedditor.fragment.SettingsFragment"
         android:label="@string/settings_fragment_name" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/CommentsFragment"
+        android:name="ru.lanik.kedditor.fragment.CommentsFragment"
+        android:label="@string/comments_fragment_name" >
     </fragment>
 </navigation>
