@@ -74,12 +74,19 @@ class SublistViewModel(
     }
 
     private fun onSubredditSubscribe(newValue: SubredditFetch): SublistModel {
-        val newList = if (newValue.isSearch) newValue.subredditList else newValue.subredditList
-        return SublistModel(
-            subreddits = newList,
-            errorState = DefaultError.NO,
-            isLoading = false,
-        )
+        return if (newValue.isSearch) {
+            _sublistViewState.value.copy(
+                subredditSearch = newValue.subredditList,
+                errorState = DefaultError.NO,
+                isLoading = false,
+            )
+        } else {
+            SublistModel(
+                subreddits = newValue.subredditList,
+                errorState = DefaultError.NO,
+                isLoading = false,
+            )
+        }
     }
 
     private fun onError(error: Throwable) {
