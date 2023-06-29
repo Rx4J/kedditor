@@ -9,28 +9,28 @@ data class PostDto(
 ) {
     @Serializable
     data class PostDataDto(
-        val subreddit: String,
+        val subreddit: String? = null,
         @SerialName("selftext")
-        val selfText: String?,
-        val saved: Boolean,
-        val title: String,
+        val selfText: String? = null,
+        val saved: Boolean? = null,
+        val title: String? = null,
         @SerialName("subreddit_name_prefixed")
-        val subredditNamePrefixed: String,
-        val name: String,
-        val score: Int,
-        val thumbnail: String?,
-        val created: Double,
+        val subredditNamePrefixed: String? = null,
+        val name: String? = null,
+        val score: Int? = null,
+        val thumbnail: String? = null,
+        val created: Double? = null,
         @SerialName("subreddit_id")
-        val subredditId: String,
-        val id: String,
-        val author: String,
+        val subredditId: String? = null,
+        val id: String? = null,
+        val author: String? = null,
         @SerialName("num_comments")
-        val numComments: Int,
-        val permalink: String,
-        val url: String,
-        val media: MediaDto?,
+        val numComments: Int? = null,
+        val permalink: String? = null,
+        val url: String? = null,
+        val media: MediaDto? = null,
         @SerialName("is_video")
-        val isVideo: Boolean,
-        val likes: Boolean?,
+        val isVideo: Boolean? = null,
+        val likes: Boolean? = null,
     )
 }
