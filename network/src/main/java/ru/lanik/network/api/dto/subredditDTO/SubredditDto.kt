@@ -10,20 +10,20 @@ data class SubredditDto(
     @Serializable
     data class SubredditDataDto(
         @SerialName("display_name")
-        val displayName: String,
+        val displayName: String? = null,
         @SerialName("display_name_prefixed")
-        val displayNamePrefixed: String,
-        val subscribers: Int?,
-        val name: String,
+        val displayNamePrefixed: String? = null,
+        val subscribers: Int? = null,
+        val name: String? = null,
         @SerialName("icon_img")
-        val iconImg: String?,
+        val iconImg: String? = null,
         @SerialName("community_icon")
-        val iconCommunity: String?,
-        val created: Double?,
+        val iconCommunity: String? = null,
+        val created: Double? = null,
         @SerialName("user_is_subscriber")
-        val isSubscriber: Boolean?,
+        val isSubscriber: Boolean? = null,
         @SerialName("header_title")
-        val description: String?,
-        val url: String?,
+        val description: String? = null,
+        val url: String? = null,
     )
 }

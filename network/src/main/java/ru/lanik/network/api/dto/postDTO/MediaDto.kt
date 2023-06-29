@@ -11,21 +11,21 @@ data class MediaDto(
     @Serializable
     data class RedditVideoDto(
         @SerialName("bitrate_kbps")
-        val bitrate: Int,
+        val bitrate: Int? = null,
         @SerialName("fallback_url")
-        val fallbackUrl: String,
-        val height: Int,
-        val width: Int,
+        val fallbackUrl: String? = null,
+        val height: Int? = null,
+        val width: Int? = null,
         @SerialName("scrubber_media_url")
-        val scrubberMediaUrl: String,
+        val scrubberMediaUrl: String? = null,
         @SerialName("dash_url")
-        val dashUrl: String,
-        val duration: Int,
+        val dashUrl: String? = null,
+        val duration: Int? = null,
         @SerialName("hls_url")
-        val hlsUrl: String,
+        val hlsUrl: String? = null,
         @SerialName("is_gif")
-        val isGif: Boolean,
+        val isGif: Boolean? = null,
         @SerialName("transcoding_status")
-        val transcodingStatus: String,
+        val transcodingStatus: String? = null,
     )
 }
