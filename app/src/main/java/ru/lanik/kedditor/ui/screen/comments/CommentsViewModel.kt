@@ -35,6 +35,7 @@ class CommentsViewModel(
     val commentsViewState: StateFlow<CommentsModel> = _commentsViewState.asStateFlow()
 
     fun onNavigateBack() {
+        compositeDisposable.clear()
         navController.navigateUp()
     }
 

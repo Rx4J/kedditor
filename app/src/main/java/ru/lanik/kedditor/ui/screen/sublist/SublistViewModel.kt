@@ -39,12 +39,6 @@ class SublistViewModel(
     }
     val sublistViewState: StateFlow<SublistModel> = _sublistViewState.asStateFlow()
 
-    init {
-        if (_sublistViewState.value.subreddits == null) {
-            subredditsRepository.fetchSubreddits(defaultPath)
-        }
-    }
-
     fun onSearching(str: String) {
         subredditsRepository.getSubredditsByName(
             query = str,
@@ -53,6 +47,7 @@ class SublistViewModel(
     }
 
     fun onNavigateBack() {
+        compositeDisposable.clear()
         navController.navigateUp()
     }
 

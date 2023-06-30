@@ -78,6 +78,10 @@ fun MainScreen(
         }
     }
 
+    if ((viewState.posts?.size ?: 0) < 1) {
+        viewModel.fetchPosts()
+    }
+
     ModalNavigationDrawer(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         drawerState = drawerState,
