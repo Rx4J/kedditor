@@ -39,9 +39,7 @@ class MainViewModel(
         val data = MutableStateFlow(PostModel(isLoading = true))
         postRepository.postFetchData
             .subscribe({ newValue ->
-                data.value = onPostSubscribe(newValue).copy(
-                    subreddits = data.value.subreddits,
-                )
+                data.value = onPostSubscribe(newValue)
             }, {
                 onError(it)
                 data.value.isLoading = false
@@ -55,18 +53,10 @@ class MainViewModel(
         }, {
             onError(it)
         }).addTo(compositeDisposable)
+        subredditsRepository.fetchSubreddits(SubredditSource(settingsStateFlow.value.defaultSubredditSource.name.lowercase()))
         return@lazy data
     }
     val mainViewState: StateFlow<PostModel> = _mainViewState.asStateFlow()
-
-    init {
-        if (mainViewState.value.posts == null) {
-            postRepository.fetchPosts(defaultPath, "")
-        }
-        if (mainViewState.value.subreddits == null) {
-            subredditsRepository.fetchSubreddits(SubredditSource(settingsStateFlow.value.defaultSubredditSource.name.lowercase()))
-        }
-    }
 
     fun getSource(): String {
         return defaultPath.mainSrc
@@ -107,10 +97,12 @@ class MainViewModel(
 
     fun onNavigateToComments(url: String) {
         val bundle = bundleOf("post_url" to url)
+        compositeDisposable.clear()
         navController.navigate(R.id.action_main_to_view, bundle)
     }
 
     fun onNavigateTo(commandId: Int) {
+        compositeDisposable.clear()
         navController.navigate(commandId)
     }
 

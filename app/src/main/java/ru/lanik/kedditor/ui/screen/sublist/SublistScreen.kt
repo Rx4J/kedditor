@@ -45,6 +45,11 @@ fun SublistScreen(
 ) {
     val searchVal = remember { mutableStateOf("") }
     val viewState by viewModel.sublistViewState.collectAsState()
+
+    if ((viewState.subreddits?.size ?: 0) < 1) {
+        viewModel.fetchSubreddits()
+    }
+
     Surface(
         color = KedditorTheme.colors.primaryBackground,
     ) {

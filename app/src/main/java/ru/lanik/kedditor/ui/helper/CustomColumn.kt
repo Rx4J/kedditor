@@ -15,12 +15,10 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,7 +30,6 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import ru.lanik.kedditor.R
 import ru.lanik.kedditor.constants.DefaultError
@@ -42,24 +39,20 @@ import ru.lanik.network.models.Post
 @Composable
 fun InfiniteListHandler(
     listState: LazyListState,
-    buffer: Int = 2,
+    listSize: Int,
     onLoadMore: () -> Unit = {},
 ) {
     val loadMore = remember {
         derivedStateOf {
-            val layoutInfo = listState.layoutInfo
-            val totalItemsNumber = layoutInfo.totalItemsCount
-            val lastVisibleItemIndex = (layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0) + 1
-            lastVisibleItemIndex > (totalItemsNumber - buffer)
+            val firstVisibleItemIndex = listState.firstVisibleItemIndex
+            val visibleItemsCount = listState.layoutInfo.visibleItemsInfo.size
+            val percent = (firstVisibleItemIndex / (listSize - visibleItemsCount).toFloat()) * 100f
+            listSize > 0 && percent > 99f
         }
     }
 
-    LaunchedEffect(loadMore) {
-        snapshotFlow { loadMore.value }
-            .distinctUntilChanged()
-            .collect {
-                onLoadMore()
-            }
+    if (loadMore.value) {
+        onLoadMore()
     }
 }
 
@@ -94,6 +87,7 @@ fun InfinityPostView(
     }
     InfiniteListHandler(
         listState = listState,
+        listSize = posts?.size ?: 0,
     ) {
         onLoadMore()
     }

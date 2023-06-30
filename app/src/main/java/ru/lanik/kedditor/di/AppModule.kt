@@ -14,6 +14,9 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import ru.lanik.kedditor.di.qualifier.CommentsCompositeDisposableQualifier
+import ru.lanik.kedditor.di.qualifier.MainCompositeDisposableQualifier
+import ru.lanik.kedditor.di.qualifier.SublistCompositeDisposableQualifier
 import ru.lanik.kedditor.model.SettingsModel
 import ru.lanik.kedditor.repository.PostRepository
 import ru.lanik.kedditor.repository.RxPostRepository
@@ -43,6 +46,18 @@ class AppModule {
     @Provides
     @Singleton
     fun provideCompositeDisposable(): CompositeDisposable = CompositeDisposable()
+
+    @Provides
+    @MainCompositeDisposableQualifier
+    fun provideMainCompositeDisposable(): CompositeDisposable = CompositeDisposable()
+
+    @Provides
+    @SublistCompositeDisposableQualifier
+    fun provideSublistCompositeDisposable(): CompositeDisposable = CompositeDisposable()
+
+    @Provides
+    @CommentsCompositeDisposableQualifier
+    fun provideCommentsCompositeDisposable(): CompositeDisposable = CompositeDisposable()
 
     @Provides
     @Singleton
@@ -112,14 +127,14 @@ class AppModule {
     @Provides
     @Singleton
     fun provideSublistViewModelFactory(
-        compositeDisposable: CompositeDisposable,
+        @SublistCompositeDisposableQualifier compositeDisposable: CompositeDisposable,
         subredditsRepository: SubredditsRepository.Reactive,
     ): SublistViewModelFactory = SublistViewModelFactory(compositeDisposable, subredditsRepository)
 
     @Provides
     @Singleton
     fun provideMainViewModelFactory(
-        compositeDisposable: CompositeDisposable,
+        @MainCompositeDisposableQualifier compositeDisposable: CompositeDisposable,
         postRepository: PostRepository.Reactive,
         subredditsRepository: SubredditsRepository.Reactive,
     ): MainViewModelFactory = MainViewModelFactory(compositeDisposable, postRepository, subredditsRepository)
@@ -133,7 +148,7 @@ class AppModule {
     @Provides
     @Singleton
     fun provideCommentsViewModelFactory(
-        compositeDisposable: CompositeDisposable,
+        @CommentsCompositeDisposableQualifier compositeDisposable: CompositeDisposable,
         postRepository: PostRepository.Reactive,
     ): CommentsViewModelFactory = CommentsViewModelFactory(postRepository, compositeDisposable)
 }

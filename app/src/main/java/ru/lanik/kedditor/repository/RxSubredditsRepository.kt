@@ -15,6 +15,7 @@ import ru.lanik.network.constants.ApiBaseConst
 import ru.lanik.network.extension.toListSubreddit
 import ru.lanik.network.extension.toSubreddit
 import ru.lanik.network.models.Subreddit
+import java.util.concurrent.atomic.AtomicBoolean
 
 class RxSubredditsRepository(
     private val subredditsAPI: SubredditsAPI,
@@ -23,25 +24,32 @@ class RxSubredditsRepository(
     private val compositeDisposable: CompositeDisposable,
 ) : SubredditsRepository.Reactive {
     override val subredditFetchData: ReplaySubject<SubredditFetch> = ReplaySubject.create(1)
+    private val loadingState: AtomicBoolean = AtomicBoolean(false)
 
     override fun fetchSubreddits(
         source: SubredditSource,
         page: String,
     ) {
-        val direct = source.mainSrc.fixAuth(settingsStateFlow.value.isAuth)
-        subredditsAPI.getSubredditListing(direct, page)
-            .applySchedulerPolicy(schedulerPolicy)
-            .subscribe({ data ->
-                val subredditList = data.data.children.toListSubreddit()
-                subredditFetchData.onNext(
-                    SubredditFetch(
-                        source = source,
-                        subredditList = subredditList,
-                    ),
-                )
-            }, { error ->
-                handleError(error)
-            }).also { compositeDisposable.add(it) }
+        if (!loadingState.get()) {
+            loadingState.set(true)
+            val direct = source.mainSrc.fixAuth(settingsStateFlow.value.isAuth)
+            subredditsAPI.getSubredditListing(direct, page)
+                .applySchedulerPolicy(schedulerPolicy)
+                .doAfterSuccess {
+                    loadingState.set(false)
+                }
+                .subscribe({ data ->
+                    val subredditList = data.data.children.toListSubreddit()
+                    subredditFetchData.onNext(
+                        SubredditFetch(
+                            source = source,
+                            subredditList = subredditList,
+                        ),
+                    )
+                }, { error ->
+                    handleError(error)
+                }).also { compositeDisposable.add(it) }
+        }
     }
 
     override fun getSubredditInfo(source: SubredditSource): Single<Subreddit> {

@@ -78,6 +78,10 @@ fun MainScreen(
         }
     }
 
+    if ((viewState.posts?.size ?: 0) < 1) {
+        viewModel.fetchPosts()
+    }
+
     ModalNavigationDrawer(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         drawerState = drawerState,
@@ -128,7 +132,7 @@ fun MainScreen(
                         onPostClick = {
                             viewModel.onNavigateToComments(it)
                         },
-                        // onLoadMore = viewModel::fetchPosts,
+                        onLoadMore = viewModel::fetchPosts,
                     )
                 }
                 BottomActionBar(
