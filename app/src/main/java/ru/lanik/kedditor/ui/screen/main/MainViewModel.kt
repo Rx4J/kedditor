@@ -19,6 +19,7 @@ import ru.lanik.kedditor.repository.PostRepository
 import ru.lanik.kedditor.repository.SettingsManager
 import ru.lanik.kedditor.repository.SubredditsRepository
 import ru.lanik.network.constants.DefaultPostSort
+import ru.lanik.network.constants.DefaultSubredditSource
 import ru.lanik.network.models.Post
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -53,7 +54,6 @@ class MainViewModel(
         }, {
             onError(it)
         }).addTo(compositeDisposable)
-        subredditsRepository.fetchSubreddits(SubredditSource(settingsStateFlow.value.defaultSubredditSource.name.lowercase()))
         return@lazy data
     }
     val mainViewState: StateFlow<PostModel> = _mainViewState.asStateFlow()
@@ -93,6 +93,11 @@ class MainViewModel(
             }
         }
         postRepository.fetchPosts(defaultPath, afterId)
+    }
+
+    fun fetchSubreddits() {
+        val source = SubredditSource(settingsStateFlow.value.defaultSubredditSource.name.lowercase())
+        subredditsRepository.fetchSubreddits(source, "")
     }
 
     fun onNavigateToComments(url: String) {
