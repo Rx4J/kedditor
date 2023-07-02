@@ -15,17 +15,23 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
@@ -35,6 +41,7 @@ import ru.lanik.kedditor.R
 import ru.lanik.kedditor.constants.DefaultError
 import ru.lanik.kedditor.ui.theme.KedditorTheme
 import ru.lanik.network.models.Post
+import java.util.concurrent.atomic.AtomicBoolean
 
 @Composable
 fun InfiniteListHandler(
@@ -62,11 +69,28 @@ fun InfinityPostView(
     onPostClick: (String) -> Unit = {},
     backgroundColor: Color = KedditorTheme.colors.primaryBackground,
     posts: List<Post>? = null,
-    isNewPath: Boolean = false,
     onLoadMore: () -> Unit = {},
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+    val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
+
+    DisposableEffect(lifecycleOwner.value) {
+        val lifecycle = lifecycleOwner.value.lifecycle
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_START) {
+                coroutineScope.launch {
+                    listState.scrollToItem(0)
+                }
+            }
+        }
+
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+        }
+    }
+
     Surface(
         color = backgroundColor,
         modifier = modifier,
@@ -90,14 +114,6 @@ fun InfinityPostView(
         listSize = posts?.size ?: 0,
     ) {
         onLoadMore()
-    }
-
-    SideEffect {
-        coroutineScope.launch {
-            if (isNewPath) {
-                listState.scrollToItem(0)
-            }
-        }
     }
 }
 

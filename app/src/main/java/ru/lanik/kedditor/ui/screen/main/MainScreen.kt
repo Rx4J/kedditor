@@ -1,5 +1,6 @@
 package ru.lanik.kedditor.ui.screen.main
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.List
@@ -35,6 +38,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -78,6 +82,7 @@ fun MainScreen(
             if (event == Lifecycle.Event.ON_START) {
                 viewModel.fetchPosts()
                 viewModel.fetchSubreddits()
+                scrollBehavior.state.heightOffset = 0.0f
             }
         }
 
@@ -100,7 +105,8 @@ fun MainScreen(
     }
 
     ModalNavigationDrawer(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         drawerState = drawerState,
         drawerContent = {
             DrawerContent(
@@ -145,7 +151,6 @@ fun MainScreen(
                 ) {
                     InfinityPostView(
                         posts = viewState.posts,
-                        isNewPath = viewState.isLoading,
                         onPostClick = {
                             viewModel.onNavigateToComments(it)
                         },
