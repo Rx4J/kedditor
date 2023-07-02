@@ -31,9 +31,12 @@ class MainViewModel(
     private val settingsManager: SettingsManager.Reactive,
 ) : ViewModel() {
     private val settingsStateFlow = settingsManager.getStateFlow()
-    private var defaultPath = PostSource(
+    private var defaultPostPath = PostSource(
         mainSrc = settingsStateFlow.value.defaultPostSource.name.lowercase(),
         sortType = settingsStateFlow.value.defaultPostSort,
+    )
+    private var defaultSubredditPath = SubredditSource(
+        mainSrc = settingsStateFlow.value.defaultSubredditSource.name.lowercase(),
     )
     private val _mainViewState: MutableStateFlow<PostModel> by lazy {
         val data = MutableStateFlow(PostModel(isLoading = true))
@@ -58,15 +61,15 @@ class MainViewModel(
     val mainViewState: StateFlow<PostModel> = _mainViewState.asStateFlow()
 
     fun getSource(): String {
-        return defaultPath.mainSrc
+        return defaultPostPath.mainSrc
     }
 
     fun getSort(): String {
-        return defaultPath.sortToStr()
+        return defaultPostPath.sortToStr()
     }
 
     fun setSource(newSource: String) {
-        defaultPath = PostSource(
+        defaultPostPath = PostSource(
             mainSrc = newSource,
             sortType = settingsStateFlow.value.defaultPostSort,
         )
@@ -77,16 +80,16 @@ class MainViewModel(
         newSort: DefaultPostSort? = null,
     ) {
         newSource?.let {
-            if (it != defaultPath.mainSrc) {
-                defaultPath = defaultPath.copy(
+            if (it != defaultPostPath.mainSrc) {
+                defaultPostPath = defaultPostPath.copy(
                     mainSrc = it,
                 )
                 setIsLoading(true)
             }
         }
         newSort?.let {
-            if (it != defaultPath.sortType) {
-                defaultPath = defaultPath.copy(
+            if (it != defaultPostPath.sortType) {
+                defaultPostPath = defaultPostPath.copy(
                     sortType = it,
                 )
                 setIsLoading(true)
@@ -98,12 +101,11 @@ class MainViewModel(
                 afterId = it.last().id
             }
         }
-        postRepository.fetchPosts(defaultPath, afterId)
+        postRepository.fetchPosts(defaultPostPath, afterId)
     }
 
     fun fetchSubreddits() {
-        val source = SubredditSource(settingsStateFlow.value.defaultSubredditSource.name.lowercase())
-        subredditsRepository.fetchSubreddits(source, "")
+        subredditsRepository.fetchSubreddits(defaultSubredditPath, "")
     }
 
     fun onNavigateToComments(url: String) {
