@@ -68,8 +68,8 @@ class MainFragment : Fragment() {
         setFragmentResultListener("sublist_fragment") { _, bundle ->
             val result = bundle.getString("subreddit")
             if ((result?.length ?: 0) > 1) {
-                viewModel.fetchPosts(
-                    newSource = result,
+                viewModel.setSource(
+                    newSource = result!!,
                 )
             }
         }

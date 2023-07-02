@@ -20,17 +20,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import ru.lanik.kedditor.R
 import ru.lanik.kedditor.ui.helper.CustomPaddingTextField
 import ru.lanik.kedditor.ui.helper.CustomTextFieldColors
@@ -45,9 +50,20 @@ fun SublistScreen(
 ) {
     val searchVal = remember { mutableStateOf("") }
     val viewState by viewModel.sublistViewState.collectAsState()
+    val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
 
-    if ((viewState.subreddits?.size ?: 0) < 1) {
-        viewModel.fetchSubreddits()
+    DisposableEffect(lifecycleOwner.value) {
+        val lifecycle = lifecycleOwner.value.lifecycle
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_START) {
+                viewModel.fetchSubreddits()
+            }
+        }
+
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+        }
     }
 
     Surface(
