@@ -250,13 +250,11 @@ fun SettingsScreen(
                     currentIndex = when (viewState.defaultSubredditSource) {
                         DefaultSubredditSource.DEFAULT -> 0
                         DefaultSubredditSource.POPULAR -> 1
-                        DefaultSubredditSource.GOLD -> 2
-                        DefaultSubredditSource.NEW -> 3
+                        DefaultSubredditSource.NEW -> 2
                     },
                     values = listOf(
                         stringResource(id = R.string.settings_option_subreddit_source_default),
                         stringResource(id = R.string.settings_option_subreddit_source_popular),
-                        stringResource(id = R.string.settings_option_subreddit_source_gold),
                         stringResource(id = R.string.settings_option_subreddit_source_new),
                     ),
                 ),
@@ -265,8 +263,7 @@ fun SettingsScreen(
                         defaultSubredditSource = when (it) {
                             0 -> DefaultSubredditSource.DEFAULT
                             1 -> DefaultSubredditSource.POPULAR
-                            2 -> DefaultSubredditSource.GOLD
-                            3 -> DefaultSubredditSource.NEW
+                            2 -> DefaultSubredditSource.NEW
                             else -> throw NotImplementedError("No valid value for this $it")
                         },
                     )
