@@ -32,7 +32,6 @@
     <string name="settings_option_post_sort_rising">Rising</string>
     <string name="settings_option_subreddit_source_default">Default</string>
     <string name="settings_option_subreddit_source_popular">Popular</string>
-    <string name="settings_option_subreddit_source_gold">Gold</string>
     <string name="settings_option_subreddit_source_new">New</string>
 
     <string name="comments_fragment_name">Comments</string>
