@@ -40,12 +40,15 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import ru.lanik.kedditor.R
+import ru.lanik.kedditor.model.DropdownMenuModel
 import ru.lanik.kedditor.model.MenuItemModel
 import ru.lanik.kedditor.ui.theme.KedditorTheme
 import ru.lanik.kedditor.utils.extension.toFormatStr
@@ -297,7 +300,7 @@ fun MenuItem(
                 )
 
                 Text(
-                    text = model.values[currentPosition.value],
+                    text = model.dropdownMenuModel.values[currentPosition.value],
                     style = KedditorTheme.typography.body,
                     color = KedditorTheme.colors.secondaryText,
                 )
@@ -323,31 +326,58 @@ fun MenuItem(
                 ),
             )
         }
-        DropdownMenu(
-            expanded = isDropdownOpen.value,
-            onDismissRequest = {
+        DropdownMenuItem(
+            model = model.dropdownMenuModel,
+            modifier = Modifier.fillMaxWidth(),
+            isDropdownOpen = isDropdownOpen.value,
+            onItemClick = {
+                currentPosition.value = it
+                isDropdownOpen.value = false
+                onItemSelected(it)
+            },
+            onDismiss = {
                 isDropdownOpen.value = false
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(KedditorTheme.colors.primaryBackground),
-        ) {
-            model.values.forEachIndexed { index, value ->
-                DropdownMenuItem(
-                    onClick = {
-                        currentPosition.value = index
-                        isDropdownOpen.value = false
-                        onItemSelected(index)
-                    },
-                    text = {
-                        Text(
-                            text = value,
-                            style = KedditorTheme.typography.body,
-                            color = KedditorTheme.colors.primaryText,
-                        )
-                    },
-                )
-            }
+        )
+    }
+}
+
+@Composable
+fun DropdownMenuItem(
+    model: DropdownMenuModel?,
+    modifier: Modifier = Modifier,
+    offset: DpOffset = DpOffset(0.dp, 0.dp),
+    backgroundColor: Color = KedditorTheme.colors.primaryBackground,
+    isDropdownOpen: Boolean = false,
+    onItemClick: (Int) -> Unit = {},
+    onDismiss: () -> Unit = {},
+    additionalContent: @Composable () -> Unit = {},
+) {
+    DropdownMenu(
+        expanded = isDropdownOpen,
+        onDismissRequest = {
+            onDismiss()
+        },
+        modifier = modifier
+            .background(backgroundColor),
+        offset = offset,
+    ) {
+        model?.values?.forEachIndexed { index, value ->
+            DropdownMenuItem(
+                onClick = {
+                    onItemClick(index)
+                },
+                text = {
+                    Text(
+                        text = value,
+                        style = KedditorTheme.typography.body,
+                        color = KedditorTheme.colors.primaryText,
+                        textAlign = TextAlign.Center,
+                        modifier = modifier,
+                    )
+                },
+            )
         }
+        additionalContent()
     }
 }

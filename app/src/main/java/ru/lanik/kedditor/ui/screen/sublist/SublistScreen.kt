@@ -28,17 +28,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import ru.lanik.kedditor.R
+import ru.lanik.kedditor.model.DropdownMenuModel
 import ru.lanik.kedditor.ui.helper.CustomPaddingTextField
 import ru.lanik.kedditor.ui.helper.CustomTextFieldColors
+import ru.lanik.kedditor.ui.helper.DropdownMenuItem
 import ru.lanik.kedditor.ui.helper.ErrorHandlerView
 import ru.lanik.kedditor.ui.helper.SubredditRow
 import ru.lanik.kedditor.ui.theme.KedditorTheme
@@ -49,8 +53,10 @@ fun SublistScreen(
     onFragmentResult: (String) -> Unit,
 ) {
     val searchVal = remember { mutableStateOf("") }
+    val isDropdownMoreOpen = remember { mutableStateOf(false) }
     val viewState by viewModel.sublistViewState.collectAsState()
     val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
+    val screenWidth = LocalConfiguration.current.screenWidthDp
 
     DisposableEffect(lifecycleOwner.value) {
         val lifecycle = lifecycleOwner.value.lifecycle
@@ -73,15 +79,41 @@ fun SublistScreen(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,
         ) {
-            TopSublistScreenBar(
-                text = searchVal.value,
-                isLoading = viewState.isLoading,
-                onTextChange = {
-                    searchVal.value = it
-                    viewModel.onSearching(it)
-                },
-                onBackClicked = viewModel::onNavigateBack,
-            )
+            Column {
+                TopSublistScreenBar(
+                    text = searchVal.value,
+                    isLoading = viewState.isLoading,
+                    onTextChange = {
+                        searchVal.value = it
+                        viewModel.onSearching(it)
+                    },
+                    onBackClicked = viewModel::onNavigateBack,
+                    onMoreClicked = {
+                        isDropdownMoreOpen.value = true
+                    },
+                )
+                DropdownMenuItem(
+                    model = DropdownMenuModel(
+                        values = listOf(
+                            stringResource(id = R.string.more_dropdown_reset),
+                        ),
+                    ),
+                    isDropdownOpen = isDropdownMoreOpen.value,
+                    onItemClick = {
+                        when (it) {
+                            0 -> viewModel.fetchSubreddits()
+                            else -> throw NotImplementedError("No valid value for this $it")
+                        }
+                        isDropdownMoreOpen.value = false
+                    },
+                    onDismiss = {
+                        isDropdownMoreOpen.value = false
+                    },
+                    offset = DpOffset(screenWidth.dp, 0.dp),
+                    backgroundColor = KedditorTheme.colors.secondaryBackground,
+                )
+            }
+
             Spacer(modifier = Modifier.height(4.dp))
             ErrorHandlerView(
                 errorState = viewState.errorState,

@@ -14,7 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -93,13 +93,11 @@ fun CommentsScreen(
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                         } else {
-                            IconButton(onClick = { }) {
-                                Icon(
-                                    imageVector = Icons.Rounded.MoreVert,
-                                    contentDescription = null,
-                                    tint = KedditorTheme.colors.tintColor,
-                                )
-                            }
+                            Icon(
+                                imageVector = Icons.Rounded.Refresh,
+                                contentDescription = null,
+                                tint = KedditorTheme.colors.primaryBackground,
+                            )
                         }
                     }
                 },
@@ -130,11 +128,15 @@ fun CommentsScreen(
                         }
                         item {
                             data.post.selfText?.let {
-                                Text(
-                                    text = it,
-                                    color = KedditorTheme.colors.primaryText,
-                                    style = KedditorTheme.typography.body,
-                                )
+                                Column(
+                                    modifier = Modifier.padding(KedditorTheme.shapes.generalPadding),
+                                ) {
+                                    Text(
+                                        text = it,
+                                        color = KedditorTheme.colors.primaryText,
+                                        style = KedditorTheme.typography.body,
+                                    )
+                                }
                             }
                         }
                         item {

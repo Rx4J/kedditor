@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.lanik.kedditor.R
+import ru.lanik.kedditor.model.DropdownMenuModel
 import ru.lanik.kedditor.model.MenuItemModel
 import ru.lanik.kedditor.ui.helper.MenuItem
 import ru.lanik.kedditor.ui.theme.KedditorCorners
@@ -75,6 +77,18 @@ fun SettingsScreen(
                         )
                     }
                 },
+                actions = {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Refresh,
+                            contentDescription = null,
+                            tint = KedditorTheme.colors.primaryBackground,
+                        )
+                    }
+                },
             )
 
             Row(
@@ -120,10 +134,12 @@ fun SettingsScreen(
                         KedditorSize.Medium -> 1
                         KedditorSize.Big -> 2
                     },
-                    values = listOf(
-                        stringResource(id = R.string.settings_option_size_small),
-                        stringResource(id = R.string.settings_option_size_medium),
-                        stringResource(id = R.string.settings_option_size_big),
+                    dropdownMenuModel = DropdownMenuModel(
+                        values = listOf(
+                            stringResource(id = R.string.settings_option_size_small),
+                            stringResource(id = R.string.settings_option_size_medium),
+                            stringResource(id = R.string.settings_option_size_big),
+                        ),
                     ),
                 ),
                 onItemSelected = {
@@ -147,10 +163,12 @@ fun SettingsScreen(
                         KedditorSize.Medium -> 1
                         KedditorSize.Big -> 2
                     },
-                    values = listOf(
-                        stringResource(id = R.string.settings_option_size_small),
-                        stringResource(id = R.string.settings_option_size_medium),
-                        stringResource(id = R.string.settings_option_size_big),
+                    dropdownMenuModel = DropdownMenuModel(
+                        values = listOf(
+                            stringResource(id = R.string.settings_option_size_small),
+                            stringResource(id = R.string.settings_option_size_medium),
+                            stringResource(id = R.string.settings_option_size_big),
+                        ),
                     ),
                 ),
                 onItemSelected = {
@@ -173,9 +191,11 @@ fun SettingsScreen(
                         KedditorCorners.Rounded -> 0
                         KedditorCorners.Flat -> 1
                     },
-                    values = listOf(
-                        stringResource(id = R.string.settings_option_shape_rounded),
-                        stringResource(id = R.string.settings_option_shape_flat),
+                    dropdownMenuModel = DropdownMenuModel(
+                        values = listOf(
+                            stringResource(id = R.string.settings_option_shape_rounded),
+                            stringResource(id = R.string.settings_option_shape_flat),
+                        ),
                     ),
                 ),
                 onItemSelected = {
@@ -197,9 +217,11 @@ fun SettingsScreen(
                         DefaultPostSource.POPULAR -> 0
                         DefaultPostSource.ALL -> 1
                     },
-                    values = listOf(
-                        stringResource(id = R.string.settings_option_post_source_popular),
-                        stringResource(id = R.string.settings_option_post_source_all),
+                    dropdownMenuModel = DropdownMenuModel(
+                        values = listOf(
+                            stringResource(id = R.string.settings_option_post_source_popular),
+                            stringResource(id = R.string.settings_option_post_source_all),
+                        ),
                     ),
                 ),
                 onItemSelected = {
@@ -223,11 +245,13 @@ fun SettingsScreen(
                         DefaultPostSort.TOP -> 2
                         DefaultPostSort.RISING -> 3
                     },
-                    values = listOf(
-                        stringResource(id = R.string.settings_option_post_sort_hot),
-                        stringResource(id = R.string.settings_option_post_sort_new),
-                        stringResource(id = R.string.settings_option_post_sort_top),
-                        stringResource(id = R.string.settings_option_post_sort_rising),
+                    dropdownMenuModel = DropdownMenuModel(
+                        values = listOf(
+                            stringResource(id = R.string.settings_option_post_sort_hot),
+                            stringResource(id = R.string.settings_option_post_sort_new),
+                            stringResource(id = R.string.settings_option_post_sort_top),
+                            stringResource(id = R.string.settings_option_post_sort_rising),
+                        ),
                     ),
                 ),
                 onItemSelected = {
@@ -252,10 +276,12 @@ fun SettingsScreen(
                         DefaultSubredditSource.POPULAR -> 1
                         DefaultSubredditSource.NEW -> 2
                     },
-                    values = listOf(
-                        stringResource(id = R.string.settings_option_subreddit_source_default),
-                        stringResource(id = R.string.settings_option_subreddit_source_popular),
-                        stringResource(id = R.string.settings_option_subreddit_source_new),
+                    dropdownMenuModel = DropdownMenuModel(
+                        values = listOf(
+                            stringResource(id = R.string.settings_option_subreddit_source_default),
+                            stringResource(id = R.string.settings_option_subreddit_source_popular),
+                            stringResource(id = R.string.settings_option_subreddit_source_new),
+                        ),
                     ),
                 ),
                 onItemSelected = {

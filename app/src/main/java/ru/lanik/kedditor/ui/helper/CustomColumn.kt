@@ -16,8 +16,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -29,6 +27,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -41,7 +40,6 @@ import ru.lanik.kedditor.R
 import ru.lanik.kedditor.constants.DefaultError
 import ru.lanik.kedditor.ui.theme.KedditorTheme
 import ru.lanik.network.models.Post
-import java.util.concurrent.atomic.AtomicBoolean
 
 @Composable
 fun InfiniteListHandler(
@@ -200,5 +198,6 @@ fun ErrorViewItem(
         color = errorTextColor,
         style = KedditorTheme.typography.body,
         modifier = Modifier.width(gifWidth),
+        textAlign = TextAlign.Center,
     )
 }

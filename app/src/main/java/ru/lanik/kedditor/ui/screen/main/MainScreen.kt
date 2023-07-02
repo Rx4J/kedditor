@@ -1,5 +1,7 @@
 package ru.lanik.kedditor.ui.screen.main
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,6 +41,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -48,16 +52,21 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import kotlinx.coroutines.launch
 import ru.lanik.kedditor.R
 import ru.lanik.kedditor.model.ActionVariant
+import ru.lanik.kedditor.model.DropdownMenuModel
+import ru.lanik.kedditor.ui.helper.DropdownMenuItem
 import ru.lanik.kedditor.ui.helper.ErrorHandlerView
 import ru.lanik.kedditor.ui.helper.InfinityPostView
 import ru.lanik.kedditor.ui.helper.SubredditRow
 import ru.lanik.kedditor.ui.theme.KedditorTheme
+import ru.lanik.network.constants.DefaultPostSort
 import ru.lanik.network.constants.DefaultPostSource
 import ru.lanik.network.models.Subreddit
 
@@ -69,8 +78,12 @@ fun MainScreen(
     val viewState by viewModel.mainViewState.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val drawerScope = rememberCoroutineScope()
+    val isDropdownMoreOpen = remember { mutableStateOf(false) }
+    val isDropdownSortOpen = remember { mutableStateOf(false) }
+    val isAccountSelectOpen = remember { mutableStateOf(false) }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
+    val screenWidth = LocalConfiguration.current.screenWidthDp
 
     DisposableEffect(lifecycleOwner.value) {
         val lifecycle = lifecycleOwner.value.lifecycle
@@ -99,8 +112,44 @@ fun MainScreen(
         }
     }
 
-    if((viewState.subreddits?.size ?: 0) < 1) {
+    if ((viewState.subreddits?.size ?: 0) < 1) {
         viewModel.fetchSubreddits()
+    }
+
+    if (isAccountSelectOpen.value) {
+        Dialog(
+            onDismissRequest = {
+                isAccountSelectOpen.value = false
+            },
+            content = { // TODO
+                Column(
+                    modifier = Modifier
+                        .background(KedditorTheme.colors.primaryBackground)
+                        .width(((screenWidth * 5) / 6).dp)
+                        .height(((screenWidth * 4) / 6).dp)
+                        .padding(KedditorTheme.shapes.generalPadding),
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .clickable { isAccountSelectOpen.value = false }
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Person,
+                            contentDescription = null,
+                            tint = KedditorTheme.colors.tintColor,
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = "Default",
+                            color = KedditorTheme.colors.primaryText,
+                            style = KedditorTheme.typography.body,
+                        )
+                    }
+                }
+            },
+        )
     }
 
     ModalNavigationDrawer(
@@ -135,14 +184,65 @@ fun MainScreen(
         },
         content = {
             Column {
-                MainTopAppBar(
-                    source = viewModel.getSource().uppercase(),
-                    sort = viewModel.getSort().uppercase(),
-                    scrollBehavior = scrollBehavior,
-                    isLoading = viewState.isLoading,
-                    onMenuClick = { openDrawer() },
-                    onMoreClick = { },
-                )
+                Column {
+                    MainTopAppBar(
+                        source = viewModel.getSource().uppercase(),
+                        sort = viewModel.getSort().uppercase(),
+                        scrollBehavior = scrollBehavior,
+                        isLoading = viewState.isLoading,
+                        onMenuClick = { openDrawer() },
+                        onTitleClick = {
+                            isDropdownSortOpen.value = true
+                        },
+                        onMoreClick = {
+                            isDropdownMoreOpen.value = true
+                        },
+                    )
+                    DropdownMenuItem(
+                        model = DropdownMenuModel(
+                            values = listOf(
+                                stringResource(id = R.string.settings_option_post_sort_hot),
+                                stringResource(id = R.string.settings_option_post_sort_new),
+                                stringResource(id = R.string.settings_option_post_sort_top),
+                                stringResource(id = R.string.settings_option_post_sort_rising),
+                            ),
+                        ),
+                        isDropdownOpen = isDropdownSortOpen.value,
+                        onItemClick = {
+                            when (it) {
+                                0 -> viewModel.fetchPosts(newSort = DefaultPostSort.HOT)
+                                1 -> viewModel.fetchPosts(newSort = DefaultPostSort.NEW)
+                                2 -> viewModel.fetchPosts(newSort = DefaultPostSort.TOP)
+                                3 -> viewModel.fetchPosts(newSort = DefaultPostSort.RISING)
+                                else -> throw NotImplementedError("No valid value for this $it")
+                            }
+                            isDropdownSortOpen.value = false
+                        },
+                        onDismiss = {
+                            isDropdownSortOpen.value = false
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    DropdownMenuItem(
+                        model = DropdownMenuModel(
+                            values = listOf(
+                                stringResource(id = R.string.more_dropdown_reset),
+                            ),
+                        ),
+                        isDropdownOpen = isDropdownMoreOpen.value,
+                        onItemClick = {
+                            when (it) {
+                                0 -> viewModel.fetchPosts()
+                                else -> throw NotImplementedError("No valid value for this $it")
+                            }
+                            isDropdownMoreOpen.value = false
+                        },
+                        onDismiss = {
+                            isDropdownMoreOpen.value = false
+                        },
+                        offset = DpOffset(screenWidth.dp, 0.dp),
+                    )
+                }
                 ErrorHandlerView(
                     errorState = viewState.errorState,
                     loadingState = viewState.posts == null,
@@ -172,6 +272,9 @@ fun MainScreen(
                         ),
                         ActionVariant(
                             icon = Icons.Rounded.Person,
+                            command = {
+                                isAccountSelectOpen.value = true
+                            },
                         ),
                     ),
                 )
@@ -189,8 +292,7 @@ fun DrawerContent(
     onSettingsClicked: () -> Unit = {},
     onSubredditClicked: (String) -> Unit = {},
 ) {
-    val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp
+    val screenWidth = LocalConfiguration.current.screenWidthDp
     Surface(
         color = KedditorTheme.colors.primaryBackground,
     ) {
