@@ -82,6 +82,10 @@ fun MainScreen(
         viewModel.fetchPosts()
     }
 
+    if ((viewState.subreddits?.size ?: 0) < 1) {
+        viewModel.fetchSubreddits()
+    }
+
     ModalNavigationDrawer(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         drawerState = drawerState,
