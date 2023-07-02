@@ -19,7 +19,6 @@ import ru.lanik.kedditor.repository.PostRepository
 import ru.lanik.kedditor.repository.SettingsManager
 import ru.lanik.kedditor.repository.SubredditsRepository
 import ru.lanik.network.constants.DefaultPostSort
-import ru.lanik.network.constants.DefaultSubredditSource
 import ru.lanik.network.models.Post
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -64,6 +63,13 @@ class MainViewModel(
 
     fun getSort(): String {
         return defaultPath.sortToStr()
+    }
+
+    fun setSource(newSource: String) {
+        defaultPath = PostSource(
+            mainSrc = newSource,
+            sortType = settingsStateFlow.value.defaultPostSort,
+        )
     }
 
     fun fetchPosts(
