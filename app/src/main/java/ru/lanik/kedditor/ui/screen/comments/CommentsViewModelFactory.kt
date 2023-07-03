@@ -4,7 +4,6 @@ import androidx.navigation.NavController
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import ru.lanik.kedditor.repository.PostRepository
 import ru.lanik.kedditor.repository.SettingsManager
-import ru.lanik.kedditor.repository.SubredditsRepository
 
 class CommentsViewModelFactory(
     private val postRepository: PostRepository.Reactive,

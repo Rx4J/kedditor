@@ -23,12 +23,12 @@ class RxSubredditsRepository(
         source: SubredditSource,
         page: String,
     ): Single<List<Subreddit>> {
-            val direct = source.mainSrc.fixAuth(settingsStateFlow.value.isAuth)
-            return subredditsAPI.getSubredditListing(direct, page)
-                .applySchedulerPolicy(schedulerPolicy)
-                .map {
-                    it.data.children.toListSubreddit()
-                }
+        val direct = source.mainSrc.fixAuth(settingsStateFlow.value.isAuth)
+        return subredditsAPI.getSubredditListing(direct, page)
+            .applySchedulerPolicy(schedulerPolicy)
+            .map {
+                it.data.children.toListSubreddit()
+            }
     }
 
     override fun getSubredditInfo(source: SubredditSource): Single<Subreddit> {

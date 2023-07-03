@@ -60,13 +60,14 @@ class MainViewModel(
     fun fetchPosts(
         newSource: String? = null,
         newSort: DefaultPostSort? = null,
+        isUpdate: Boolean = false,
     ) {
+        setIsLoading(true)
         newSource?.let {
             if (it != defaultPostPath.mainSrc) {
                 defaultPostPath = defaultPostPath.copy(
                     mainSrc = it,
                 )
-                setIsLoading(true)
             }
         }
         newSort?.let {
@@ -74,19 +75,13 @@ class MainViewModel(
                 defaultPostPath = defaultPostPath.copy(
                     sortType = it,
                 )
-                setIsLoading(true)
             }
         }
-        var afterId = ""
-        _mainViewState.value.posts?.let {
-            if (it.isNotEmpty() && !_mainViewState.value.isLoading) {
-                afterId = it.last().id
-            }
-        }
+        val afterId = _mainViewState.value.lastPostId ?: ""
         postRepository.fetchPosts(defaultPostPath, afterId).subscribe({
             _mainViewState.value = onPostSubscribe(
                 newValue = it,
-                isUpdate = (newSource == null && newSort == null)
+                isUpdate = isUpdate,
             )
         }, {
             onError(it)
@@ -95,7 +90,7 @@ class MainViewModel(
     }
 
     fun fetchPostsForUpdate() {
-        fetchPosts(null, null)
+        fetchPosts(isUpdate = true)
     }
 
     fun fetchSubreddits() {
@@ -136,12 +131,17 @@ class MainViewModel(
         val newList = mutableListOf<Post>()
         if (isUpdate) {
             _mainViewState.value.posts?.let {
-                newList.addAll(it)
+                if (newValue.last().id == it.last().id) {
+                    return _mainViewState.value
+                } else {
+                    newList.addAll(it)
+                }
             }
         }
         newList.addAll(newValue)
         return mainViewState.value.copy(
             posts = newList,
+            lastPostId = newList.last().id,
             errorState = DefaultError.NO,
             isLoading = false,
         )

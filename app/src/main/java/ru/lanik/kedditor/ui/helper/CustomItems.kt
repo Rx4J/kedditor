@@ -227,7 +227,7 @@ fun PostViewItem(
                     style = KedditorTheme.typography.caption,
                 )
             }
-            if(isAuth) {
+            if (isAuth) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     horizontalArrangement = Arrangement.Start,
