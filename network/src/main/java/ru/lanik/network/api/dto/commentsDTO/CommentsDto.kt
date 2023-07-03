@@ -2,6 +2,7 @@ package ru.lanik.network.api.dto.commentsDTO
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class CommentsDto(
@@ -17,6 +18,6 @@ data class CommentsDto(
         @SerialName("body")
         val bodyComments: String? = null,
         val ups: Int? = null,
-        // val replies: List<JsonElement>,
+        val replies: JsonElement? = null,
     )
 }

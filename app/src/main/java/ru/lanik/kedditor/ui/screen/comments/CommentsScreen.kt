@@ -200,9 +200,7 @@ fun CommentsViewItem(
                 Text(
                     text = comments.commentsBody!!,
                     color = KedditorTheme.colors.primaryText,
-                    style = KedditorTheme.typography.heading.copy(
-                        fontSize = 18.sp,
-                    ),
+                    style = KedditorTheme.typography.body,
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
