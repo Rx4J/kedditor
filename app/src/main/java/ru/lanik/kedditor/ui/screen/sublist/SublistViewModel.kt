@@ -31,7 +31,6 @@ class SublistViewModel(
     val sublistViewState: StateFlow<SublistModel> = _sublistViewState.asStateFlow()
 
     fun onSearching(str: String) {
-        setIsLoading(true)
         subredditsRepository.getSubredditsByName(
             query = str,
             limit = 5,
@@ -42,7 +41,6 @@ class SublistViewModel(
             )
         }, {
             onError(it)
-            setIsLoading(false)
         }).addTo(compositeDisposable)
     }
 
