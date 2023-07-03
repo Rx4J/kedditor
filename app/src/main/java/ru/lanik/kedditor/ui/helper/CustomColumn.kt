@@ -64,6 +64,7 @@ fun InfiniteListHandler(
 @Composable
 fun InfinityPostView(
     modifier: Modifier = Modifier,
+    isAuth: Boolean = false,
     onPostClick: (String) -> Unit = {},
     backgroundColor: Color = KedditorTheme.colors.primaryBackground,
     posts: List<Post>? = null,
@@ -101,6 +102,7 @@ fun InfinityPostView(
                     PostViewItem(
                         post = it,
                         onPostClick = onPostClick,
+                        isAuth = isAuth,
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                 }

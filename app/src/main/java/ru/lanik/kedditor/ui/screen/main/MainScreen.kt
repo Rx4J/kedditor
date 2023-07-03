@@ -255,6 +255,7 @@ fun MainScreen(
                             viewModel.onNavigateToComments(it)
                         },
                         onLoadMore = viewModel::fetchPostsForUpdate,
+                        isAuth = viewModel.isAuth(),
                     )
                 }
                 BottomActionBar(

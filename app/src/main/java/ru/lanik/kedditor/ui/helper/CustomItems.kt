@@ -118,6 +118,7 @@ fun SubredditRow(
 fun PostViewItem(
     post: Post,
     showThumb: Boolean = true,
+    isAuth: Boolean = false,
     onPostClick: (String) -> Unit = {},
     onDirUp: (String) -> Unit = {},
     onDirDown: (String) -> Unit = {},
@@ -226,43 +227,46 @@ fun PostViewItem(
                     style = KedditorTheme.typography.caption,
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                IconButton(
-                    onClick = { onDirUp(post.url) },
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.ArrowBack,
-                        contentDescription = null,
-                        tint = KedditorTheme.colors.tintColor,
-                        modifier = Modifier.rotate(90f),
-                    )
-                }
+            if(isAuth) {
+                Spacer(modifier = Modifier.height(8.dp))
                 Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.weight(2f),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text(
-                        text = post.score.toFormatStr("."),
-                        color = KedditorTheme.colors.secondaryText,
-                        style = KedditorTheme.typography.toolbar,
-                    )
-                }
-                IconButton(
-                    onClick = { onDirDown(post.url) },
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.ArrowBack,
-                        contentDescription = null,
-                        tint = KedditorTheme.colors.tintColor,
-                        modifier = Modifier.rotate(270f),
-                    )
+                    IconButton(
+                        onClick = { onDirUp(post.url) },
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.ArrowBack,
+                            contentDescription = null,
+                            tint = KedditorTheme.colors.tintColor,
+                            modifier = Modifier.rotate(90f),
+                        )
+                    }
+
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.weight(2f),
+                    ) {
+                        Text(
+                            text = post.score.toFormatStr("."),
+                            color = KedditorTheme.colors.secondaryText,
+                            style = KedditorTheme.typography.toolbar,
+                        )
+                    }
+                    IconButton(
+                        onClick = { onDirDown(post.url) },
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.ArrowBack,
+                            contentDescription = null,
+                            tint = KedditorTheme.colors.tintColor,
+                            modifier = Modifier.rotate(270f),
+                        )
+                    }
                 }
             }
         }

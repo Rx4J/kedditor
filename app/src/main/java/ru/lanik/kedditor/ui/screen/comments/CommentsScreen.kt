@@ -124,6 +124,7 @@ fun CommentsScreen(
                         item {
                             PostViewItem(
                                 post = data.post,
+                                isAuth = viewModel.isAuth(),
                             )
                         }
                         item {

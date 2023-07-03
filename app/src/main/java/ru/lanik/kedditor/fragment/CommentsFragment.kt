@@ -37,6 +37,7 @@ class CommentsFragment : Fragment() {
         viewModel = viewModelFactory.getViewModel(
             navController = findNavController(),
             postUrl = postUrl,
+            settingsManager = settingsManager,
         )
         return ComposeView(requireContext()).apply {
             setContent {
