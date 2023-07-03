@@ -139,9 +139,10 @@ class MainViewModel(
             }
         }
         newList.addAll(newValue)
+        val pageId = if(newList.isNotEmpty()) newList.last().id else ""
         return mainViewState.value.copy(
             posts = newList,
-            lastPostId = newList.last().id,
+            lastPostId = pageId,
             errorState = DefaultError.NO,
             isLoading = false,
         )
