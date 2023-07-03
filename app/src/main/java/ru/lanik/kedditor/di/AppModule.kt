@@ -104,8 +104,7 @@ class AppModule {
         subredditsAPI: SubredditsAPI,
         schedulerPolicy: SchedulerPolicy,
         settingsStateFlow: StateFlow<SettingsModel>,
-        compositeDisposable: CompositeDisposable,
-    ): SubredditsRepository.Reactive = RxSubredditsRepository(subredditsAPI, schedulerPolicy, settingsStateFlow, compositeDisposable)
+    ): SubredditsRepository.Reactive = RxSubredditsRepository(subredditsAPI, schedulerPolicy, settingsStateFlow)
 
     @Provides
     @Singleton
@@ -114,8 +113,7 @@ class AppModule {
         subredditsAPI: SubredditsAPI,
         schedulerPolicy: SchedulerPolicy,
         settingsStateFlow: StateFlow<SettingsModel>,
-        compositeDisposable: CompositeDisposable,
-    ): PostRepository.Reactive = RxPostRepository(postAPI, subredditsAPI, schedulerPolicy, settingsStateFlow, compositeDisposable)
+    ): PostRepository.Reactive = RxPostRepository(postAPI, subredditsAPI, schedulerPolicy, settingsStateFlow)
 
     @Provides
     @Singleton

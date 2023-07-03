@@ -11,8 +11,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import ru.lanik.kedditor.R
 import ru.lanik.kedditor.constants.DefaultError
 import ru.lanik.kedditor.model.PostModel
-import ru.lanik.kedditor.model.fetch.PostFetch
-import ru.lanik.kedditor.model.fetch.SubredditFetch
 import ru.lanik.kedditor.model.source.PostSource
 import ru.lanik.kedditor.model.source.SubredditSource
 import ru.lanik.kedditor.repository.PostRepository
@@ -20,6 +18,7 @@ import ru.lanik.kedditor.repository.SettingsManager
 import ru.lanik.kedditor.repository.SubredditsRepository
 import ru.lanik.network.constants.DefaultPostSort
 import ru.lanik.network.models.Post
+import ru.lanik.network.models.Subreddit
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -38,26 +37,7 @@ class MainViewModel(
     private var defaultSubredditPath = SubredditSource(
         mainSrc = settingsStateFlow.value.defaultSubredditSource.name.lowercase(),
     )
-    private val _mainViewState: MutableStateFlow<PostModel> by lazy {
-        val data = MutableStateFlow(PostModel(isLoading = true))
-        postRepository.postFetchData
-            .subscribe({ newValue ->
-                data.value = onPostSubscribe(newValue)
-            }, {
-                onError(it)
-                data.value.isLoading = false
-            }).addTo(compositeDisposable)
-        subredditsRepository.subredditFetchData.subscribe({ newValue ->
-            data.value = onSubredditSubscribe(newValue).copy(
-                posts = data.value.posts,
-                isLoading = data.value.isLoading,
-                errorState = data.value.errorState,
-            )
-        }, {
-            onError(it)
-        }).addTo(compositeDisposable)
-        return@lazy data
-    }
+    private val _mainViewState = MutableStateFlow(PostModel(isLoading = true))
     val mainViewState: StateFlow<PostModel> = _mainViewState.asStateFlow()
 
     fun getSource(): String {
@@ -101,11 +81,27 @@ class MainViewModel(
                 afterId = it.last().id
             }
         }
-        postRepository.fetchPosts(defaultPostPath, afterId)
+        postRepository.fetchPosts(defaultPostPath, afterId).subscribe({
+            _mainViewState.value = onPostSubscribe(
+                newValue = it,
+                isUpdate = (newSource == null && newSort == null)
+            )
+        }, {
+            onError(it)
+            setIsLoading(false)
+        }).addTo(compositeDisposable)
+    }
+
+    fun fetchPostsForUpdate() {
+        fetchPosts(null, null)
     }
 
     fun fetchSubreddits() {
-        subredditsRepository.fetchSubreddits(defaultSubredditPath, "")
+        subredditsRepository.fetchSubreddits(defaultSubredditPath, "").subscribe({
+            _mainViewState.value = onSubredditSubscribe(it)
+        }, {
+            onError(it)
+        }).addTo(compositeDisposable)
     }
 
     fun onNavigateToComments(url: String) {
@@ -131,24 +127,28 @@ class MainViewModel(
         } else { error.printStackTrace() }
     }
 
-    private fun onPostSubscribe(newValue: PostFetch): PostModel {
+    private fun onPostSubscribe(
+        newValue: List<Post>,
+        isUpdate: Boolean,
+    ): PostModel {
         val newList = mutableListOf<Post>()
-        if (newValue.isUpdate) {
+        if (isUpdate) {
             _mainViewState.value.posts?.let {
                 newList.addAll(it)
             }
         }
-        newList.addAll(newValue.posts)
-        return PostModel(
+        newList.addAll(newValue)
+        return mainViewState.value.copy(
             posts = newList,
             errorState = DefaultError.NO,
             isLoading = false,
         )
     }
 
-    private fun onSubredditSubscribe(newValue: SubredditFetch): PostModel {
-        return PostModel(
-            subreddits = newValue.subredditList,
+    private fun onSubredditSubscribe(newValue: List<Subreddit>): PostModel {
+        return mainViewState.value.copy(
+            subreddits = newValue,
+            errorState = DefaultError.NO,
         )
     }
 
