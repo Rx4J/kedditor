@@ -215,54 +215,56 @@ fun ErrorHandlerView(
                 }
             } else {
                 content()
-                when (errorState) {
-                    DefaultError.NO_INTERNET -> {
-                        val snackbarMessage = stringResource(id = R.string.error_snackbar_no_internet)
-                        val snackbarActionLabel = stringResource(id = R.string.error_snackbar_reset)
-                        snackbarHostState.let {
-                            coroutineScope.launch {
-                                val result = it.value.showSnackbar(
-                                    message = snackbarMessage,
-                                    actionLabel = snackbarActionLabel,
-                                    withDismissAction = true,
-                                )
-                                when (result) {
-                                    SnackbarResult.ActionPerformed -> onResetClick(true)
-                                    else -> {}
+                if (errorState != DefaultError.NO) {
+                    when (errorState) {
+                        DefaultError.NO_INTERNET -> {
+                            val snackbarMessage = stringResource(id = R.string.error_snackbar_no_internet)
+                            val snackbarActionLabel = stringResource(id = R.string.error_snackbar_reset)
+                            snackbarHostState.let {
+                                coroutineScope.launch {
+                                    val result = it.value.showSnackbar(
+                                        message = snackbarMessage,
+                                        actionLabel = snackbarActionLabel,
+                                        withDismissAction = true,
+                                    )
+                                    when (result) {
+                                        SnackbarResult.ActionPerformed -> onResetClick(true)
+                                        else -> {}
+                                    }
                                 }
                             }
                         }
-                    }
-                    DefaultError.UNKNOWN_HOST -> {
-                        val snackbarMessage = stringResource(id = R.string.error_snackbar_no_internet)
-                        val snackbarActionLabel = stringResource(id = R.string.error_snackbar_reset)
-                        snackbarHostState.let {
-                            coroutineScope.launch {
-                                val result = it.value.showSnackbar(
-                                    message = snackbarMessage,
-                                    actionLabel = snackbarActionLabel,
-                                    withDismissAction = true,
-                                )
-                                when (result) {
-                                    SnackbarResult.ActionPerformed -> onResetClick(true)
-                                    else -> {}
+                        DefaultError.UNKNOWN_HOST -> {
+                            val snackbarMessage = stringResource(id = R.string.error_snackbar_no_internet)
+                            val snackbarActionLabel = stringResource(id = R.string.error_snackbar_reset)
+                            snackbarHostState.let {
+                                coroutineScope.launch {
+                                    val result = it.value.showSnackbar(
+                                        message = snackbarMessage,
+                                        actionLabel = snackbarActionLabel,
+                                        withDismissAction = true,
+                                    )
+                                    when (result) {
+                                        SnackbarResult.ActionPerformed -> onResetClick(true)
+                                        else -> {}
+                                    }
                                 }
                             }
                         }
-                    }
-                    else -> {
-                        val snackbarMessage = stringResource(id = R.string.error_snackbar_other)
-                        val snackbarActionLabel = stringResource(id = R.string.error_snackbar_reset)
-                        snackbarHostState.let {
-                            coroutineScope.launch {
-                                val result = it.value.showSnackbar(
-                                    message = snackbarMessage,
-                                    actionLabel = snackbarActionLabel,
-                                    withDismissAction = true,
-                                )
-                                when (result) {
-                                    SnackbarResult.ActionPerformed -> onResetClick(true)
-                                    else -> {}
+                        else -> {
+                            val snackbarMessage = stringResource(id = R.string.error_snackbar_other)
+                            val snackbarActionLabel = stringResource(id = R.string.error_snackbar_reset)
+                            snackbarHostState.let {
+                                coroutineScope.launch {
+                                    val result = it.value.showSnackbar(
+                                        message = snackbarMessage,
+                                        actionLabel = snackbarActionLabel,
+                                        withDismissAction = true,
+                                    )
+                                    when (result) {
+                                        SnackbarResult.ActionPerformed -> onResetClick(true)
+                                        else -> {}
+                                    }
                                 }
                             }
                         }
