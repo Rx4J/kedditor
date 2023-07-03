@@ -3,6 +3,8 @@ package ru.lanik.kedditor.ui.screen.comments
 import androidx.navigation.NavController
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import ru.lanik.kedditor.repository.PostRepository
+import ru.lanik.kedditor.repository.SettingsManager
+import ru.lanik.kedditor.repository.SubredditsRepository
 
 class CommentsViewModelFactory(
     private val postRepository: PostRepository.Reactive,
@@ -11,12 +13,14 @@ class CommentsViewModelFactory(
     fun getViewModel(
         navController: NavController,
         postUrl: String,
+        settingsManager: SettingsManager.Reactive,
     ): CommentsViewModel {
         return CommentsViewModel(
             compositeDisposable = compositeDisposable,
             navController = navController,
             postRepository = postRepository,
             postUrl = postUrl,
+            settingsManager = settingsManager,
         )
     }
 }

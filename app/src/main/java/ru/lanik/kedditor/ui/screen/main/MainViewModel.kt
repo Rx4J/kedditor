@@ -55,6 +55,8 @@ class MainViewModel(
         )
     }
 
+    fun isAuth(): Boolean = settingsStateFlow.value.isAuth
+
     fun fetchPosts(
         newSource: String? = null,
         newSort: DefaultPostSort? = null,

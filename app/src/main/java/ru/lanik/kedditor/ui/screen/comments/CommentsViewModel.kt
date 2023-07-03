@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import ru.lanik.kedditor.constants.DefaultError
 import ru.lanik.kedditor.model.CommentsModel
 import ru.lanik.kedditor.repository.PostRepository
+import ru.lanik.kedditor.repository.SettingsManager
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -18,7 +19,9 @@ class CommentsViewModel(
     private val compositeDisposable: CompositeDisposable,
     private val navController: NavController,
     private val postUrl: String,
+    private val settingsManager: SettingsManager.Reactive,
 ) : ViewModel() {
+    private val settingsStateFlow = settingsManager.getStateFlow()
     private val _commentsViewState: MutableStateFlow<CommentsModel> by lazy {
         val data = MutableStateFlow(CommentsModel(isLoading = true))
         postRepository.fetchPostWithComments(postUrl).subscribe({ newValue ->
@@ -33,6 +36,8 @@ class CommentsViewModel(
         return@lazy data
     }
     val commentsViewState: StateFlow<CommentsModel> = _commentsViewState.asStateFlow()
+
+    fun isAuth(): Boolean = settingsStateFlow.value.isAuth
 
     fun onNavigateBack() {
         compositeDisposable.clear()
