@@ -31,7 +31,7 @@ class RxPostRepository(
         val direct = source.toPath().fixAuth(settingsStateFlow.value.isAuth)
         return postAPI.getPosts(direct, after)
             .applySchedulerPolicy(schedulerPolicy)
-            .doOnError { compositeDisposable.dispose() }
+            .doOnDispose { compositeDisposable.dispose() }
             .map { dto ->
                 val postList = dto.data.children.toListPost()
                 postList.forEach { post ->
