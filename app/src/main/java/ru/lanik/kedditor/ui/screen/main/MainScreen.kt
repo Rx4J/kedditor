@@ -184,7 +184,9 @@ fun MainScreen(
             )
         },
         content = {
-            Column {
+            Column(
+                modifier = Modifier.background(KedditorTheme.colors.primaryBackground)
+            ) {
                 Column {
                     MainTopAppBar(
                         source = viewModel.getSource().uppercase(),
@@ -247,6 +249,9 @@ fun MainScreen(
                 ErrorHandlerView(
                     errorState = viewState.errorState,
                     loadingState = viewState.posts == null,
+                    onResetClick = {
+                        viewModel.fetchPosts(isUpdate = it)
+                    },
                     modifier = Modifier.weight(1f),
                 ) {
                     InfinityPostView(

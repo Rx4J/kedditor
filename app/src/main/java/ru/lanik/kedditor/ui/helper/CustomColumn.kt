@@ -12,11 +12,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
@@ -124,8 +128,11 @@ fun ErrorHandlerView(
     loadingState: Boolean = false,
     backgroundColor: Color = KedditorTheme.colors.primaryBackground,
     errorTextColor: Color = KedditorTheme.colors.primaryText,
+    onResetClick: (Boolean) -> Unit = {},
     content: @Composable () -> Unit = {},
 ) {
+    val snackbarHostState = remember { mutableStateOf(SnackbarHostState()) }
+    val coroutineScope = rememberCoroutineScope()
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = backgroundColor,
@@ -139,36 +146,134 @@ fun ErrorHandlerView(
                 ) {
                     when (errorState) {
                         DefaultError.NO_INTERNET -> {
+                            val snackbarMessage = stringResource(id = R.string.error_snackbar_no_internet)
+                            val snackbarActionLabel = stringResource(id = R.string.error_snackbar_reset)
                             ErrorViewItem(
                                 imageId = R.drawable.where_connect,
                                 errorMessage = stringResource(id = R.string.error_no_internet),
                                 errorTextColor = errorTextColor,
                             )
+                            snackbarHostState.let {
+                                coroutineScope.launch {
+                                    val result = it.value.showSnackbar(
+                                        message = snackbarMessage,
+                                        actionLabel = snackbarActionLabel,
+                                        withDismissAction = true,
+                                    )
+                                    when (result) {
+                                        SnackbarResult.ActionPerformed -> onResetClick(false)
+                                        else -> {}
+                                    }
+                                }
+                            }
                         }
                         DefaultError.UNKNOWN_HOST -> {
+                            val snackbarMessage = stringResource(id = R.string.error_snackbar_no_internet)
+                            val snackbarActionLabel = stringResource(id = R.string.error_snackbar_reset)
                             ErrorViewItem(
                                 imageId = R.drawable.where_connect,
                                 errorMessage = stringResource(id = R.string.error_unknown_host),
                                 errorTextColor = errorTextColor,
                             )
+                            snackbarHostState.let {
+                                coroutineScope.launch {
+                                    val result = it.value.showSnackbar(
+                                        message = snackbarMessage,
+                                        actionLabel = snackbarActionLabel,
+                                        withDismissAction = true,
+                                    )
+                                    when (result) {
+                                        SnackbarResult.ActionPerformed -> onResetClick(false)
+                                        else -> {}
+                                    }
+                                }
+                            }
                         }
                         else -> {
+                            val snackbarMessage = stringResource(id = R.string.error_snackbar_other)
+                            val snackbarActionLabel = stringResource(id = R.string.error_snackbar_reset)
                             ErrorViewItem(
                                 imageId = R.drawable.where_connect,
                                 errorMessage = stringResource(id = R.string.error_other),
                                 errorTextColor = errorTextColor,
                             )
+                            snackbarHostState.let {
+                                coroutineScope.launch {
+                                    val result = it.value.showSnackbar(
+                                        message = snackbarMessage,
+                                        actionLabel = snackbarActionLabel,
+                                        withDismissAction = true,
+                                    )
+                                    when (result) {
+                                        SnackbarResult.ActionPerformed -> onResetClick(false)
+                                        else -> {}
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             } else {
                 content()
                 when (errorState) {
-                    else -> { /* TODO */ }
+                    DefaultError.NO_INTERNET -> {
+                        val snackbarMessage = stringResource(id = R.string.error_snackbar_no_internet)
+                        val snackbarActionLabel = stringResource(id = R.string.error_snackbar_reset)
+                        snackbarHostState.let {
+                            coroutineScope.launch {
+                                val result = it.value.showSnackbar(
+                                    message = snackbarMessage,
+                                    actionLabel = snackbarActionLabel,
+                                    withDismissAction = true,
+                                )
+                                when (result) {
+                                    SnackbarResult.ActionPerformed -> onResetClick(true)
+                                    else -> {}
+                                }
+                            }
+                        }
+                    }
+                    DefaultError.UNKNOWN_HOST -> {
+                        val snackbarMessage = stringResource(id = R.string.error_snackbar_no_internet)
+                        val snackbarActionLabel = stringResource(id = R.string.error_snackbar_reset)
+                        snackbarHostState.let {
+                            coroutineScope.launch {
+                                val result = it.value.showSnackbar(
+                                    message = snackbarMessage,
+                                    actionLabel = snackbarActionLabel,
+                                    withDismissAction = true,
+                                )
+                                when (result) {
+                                    SnackbarResult.ActionPerformed -> onResetClick(true)
+                                    else -> {}
+                                }
+                            }
+                        }
+                    }
+                    else -> {
+                        val snackbarMessage = stringResource(id = R.string.error_snackbar_other)
+                        val snackbarActionLabel = stringResource(id = R.string.error_snackbar_reset)
+                        snackbarHostState.let {
+                            coroutineScope.launch {
+                                val result = it.value.showSnackbar(
+                                    message = snackbarMessage,
+                                    actionLabel = snackbarActionLabel,
+                                    withDismissAction = true,
+                                )
+                                when (result) {
+                                    SnackbarResult.ActionPerformed -> onResetClick(true)
+                                    else -> {}
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
+    SnackbarHost(
+        hostState = snackbarHostState.value,
+    )
 }
 
 @Composable

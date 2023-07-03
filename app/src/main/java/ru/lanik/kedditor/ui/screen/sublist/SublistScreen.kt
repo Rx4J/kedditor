@@ -118,6 +118,7 @@ fun SublistScreen(
             ErrorHandlerView(
                 errorState = viewState.errorState,
                 loadingState = viewState.subreddits == null,
+                onResetClick = { viewModel.fetchSubreddits() },
                 modifier = Modifier.weight(1f),
             ) {
                 LazyColumn {
