@@ -73,5 +73,13 @@ class MainFragment : Fragment() {
                 )
             }
         }
+        setFragmentResultListener("comments_fragment") { _, bundle ->
+            val result = bundle.getString("subreddit")
+            if ((result?.length ?: 0) > 1) {
+                viewModel.setSource(
+                    newSource = result!!,
+                )
+            }
+        }
     }
 }

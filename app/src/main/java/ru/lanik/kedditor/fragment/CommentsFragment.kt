@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.lanik.kedditor.repository.SettingsManager
@@ -58,6 +60,12 @@ class CommentsFragment : Fragment() {
                     )
                     CommentsScreen(
                         viewModel = viewModel,
+                        onFragmentResult = {
+                            setFragmentResult(
+                                "comments_fragment",
+                                bundleOf("subreddit" to it),
+                            )
+                        },
                     )
                 }
             }
