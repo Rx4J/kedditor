@@ -43,6 +43,7 @@ import ru.lanik.network.models.Comments
 @Composable
 fun CommentsScreen(
     viewModel: CommentsViewModel,
+    onFragmentResult: (String) -> Unit = {},
 ) {
     val viewState by viewModel.commentsViewState.collectAsState()
     Surface(
@@ -57,7 +58,12 @@ fun CommentsScreen(
                 ),
                 navigationIcon = {
                     IconButton(
-                        onClick = { viewModel.onNavigateBack() },
+                        onClick = {
+                            viewModel.onNavigateBack()
+                            viewState.postWithComments?.let {
+                                onFragmentResult(it.post.subredditNamePrefixed.drop(2))
+                            }
+                        },
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.ArrowBack,
