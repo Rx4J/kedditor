@@ -30,6 +30,7 @@ class MainViewModel(
     private val settingsManager: SettingsManager.Reactive,
 ) : ViewModel() {
     private val settingsStateFlow = settingsManager.getStateFlow()
+    private var retryCount = 0
     private var defaultPostPath = PostSource(
         mainSrc = settingsStateFlow.value.defaultPostSource.name.lowercase(),
         sortType = settingsStateFlow.value.defaultPostSort,
@@ -48,21 +49,10 @@ class MainViewModel(
         return defaultPostPath.sortToStr()
     }
 
-    fun setSource(newSource: String) {
-        defaultPostPath = PostSource(
-            mainSrc = newSource,
-            sortType = settingsStateFlow.value.defaultPostSort,
-        )
-    }
-
-    fun isAuth(): Boolean = settingsStateFlow.value.isAuth
-
-    fun fetchPosts(
+    fun setSource(
         newSource: String? = null,
         newSort: DefaultPostSort? = null,
-        isUpdate: Boolean = false,
     ) {
-        setIsLoading(true)
         newSource?.let {
             if (it != defaultPostPath.mainSrc) {
                 defaultPostPath = defaultPostPath.copy(
@@ -77,6 +67,17 @@ class MainViewModel(
                 )
             }
         }
+    }
+
+    fun isAuth(): Boolean = settingsStateFlow.value.isAuth
+
+    fun fetchPosts(
+        newSource: String? = null,
+        newSort: DefaultPostSort? = null,
+        isUpdate: Boolean = false,
+    ) {
+        setIsLoading(true)
+        setSource(newSource, newSort)
         val afterId = _mainViewState.value.lastPostId ?: ""
         postRepository.fetchPosts(defaultPostPath, afterId).subscribe({
             _mainViewState.value = onPostSubscribe(
@@ -129,17 +130,27 @@ class MainViewModel(
         isUpdate: Boolean,
     ): PostModel {
         val newList = mutableListOf<Post>()
+        if(newValue.isEmpty() && retryCount < 5) {
+            fetchPosts()
+            retryCount++
+            return PostModel(
+                isLoading = true
+            )
+        }
         if (isUpdate) {
             _mainViewState.value.posts?.let {
-                if (newValue.last().id == it.last().id) {
-                    return _mainViewState.value
-                } else {
-                    newList.addAll(it)
+                if(it.isNotEmpty()) {
+                    if (newValue.last().id == it.last().id) {
+                        return _mainViewState.value
+                    } else {
+                        newList.addAll(it)
+                    }
                 }
             }
         }
         newList.addAll(newValue)
         val pageId = if(newList.isNotEmpty()) newList.last().id else ""
+        retryCount = 0
         return mainViewState.value.copy(
             posts = newList,
             lastPostId = pageId,
