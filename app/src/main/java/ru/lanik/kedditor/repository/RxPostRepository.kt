@@ -1,5 +1,6 @@
 package ru.lanik.kedditor.repository
 
+import android.util.Log
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -27,6 +28,7 @@ class RxPostRepository(
         source: PostSource,
         after: String,
     ): Single<List<Post>> {
+        Log.e("Deb", source.toPath())
         val compositeDisposable = CompositeDisposable()
         val direct = source.toPath().fixAuth(settingsStateFlow.value.isAuth)
         return postAPI.getPosts(direct, after)
