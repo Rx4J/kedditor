@@ -185,7 +185,7 @@ fun MainScreen(
         },
         content = {
             Column(
-                modifier = Modifier.background(KedditorTheme.colors.primaryBackground)
+                modifier = Modifier.background(KedditorTheme.colors.primaryBackground),
             ) {
                 Column {
                     MainTopAppBar(

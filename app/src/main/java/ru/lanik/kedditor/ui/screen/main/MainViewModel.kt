@@ -130,16 +130,16 @@ class MainViewModel(
         isUpdate: Boolean,
     ): PostModel {
         val newList = mutableListOf<Post>()
-        if(newValue.isEmpty() && retryCount < 5) {
+        if (newValue.isEmpty() && retryCount < 5) {
             fetchPosts()
             retryCount++
             return PostModel(
-                isLoading = true
+                isLoading = true,
             )
         }
         if (isUpdate) {
             _mainViewState.value.posts?.let {
-                if(it.isNotEmpty()) {
+                if (it.isNotEmpty()) {
                     if (newValue.last().id == it.last().id) {
                         return _mainViewState.value
                     } else {
@@ -149,7 +149,7 @@ class MainViewModel(
             }
         }
         newList.addAll(newValue)
-        val pageId = if(newList.isNotEmpty()) newList.last().id else ""
+        val pageId = if (newList.isNotEmpty()) newList.last().id else ""
         retryCount = 0
         return mainViewState.value.copy(
             posts = newList,
