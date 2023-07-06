@@ -102,8 +102,12 @@ class MainViewModel(
         }).addTo(compositeDisposable)
     }
 
-    fun onNavigateToComments(url: String) {
+    fun onNavigateToComments(
+        url: String,
+        parentSubredditName: String,
+    ) {
         val bundle = bundleOf("post_url" to url)
+        bundle.putString("parent_sub", parentSubredditName)
         compositeDisposable.clear()
         navController.navigate(R.id.action_main_to_view, bundle)
     }

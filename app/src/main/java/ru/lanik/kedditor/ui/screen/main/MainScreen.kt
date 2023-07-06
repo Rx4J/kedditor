@@ -257,7 +257,10 @@ fun MainScreen(
                     InfinityPostView(
                         posts = viewState.posts,
                         onPostClick = {
-                            viewModel.onNavigateToComments(it)
+                            viewModel.onNavigateToComments(
+                                url = it,
+                                parentSubredditName = viewModel.getSource()
+                            )
                         },
                         onLoadMore = viewModel::fetchPostsForUpdate,
                         isAuth = viewModel.isAuth(),
