@@ -26,6 +26,8 @@ appcompat-ver = "1.6.1"
 coil-ver = "2.4.0"
 fragment-ver = "1.5.7"
 datastore-ver = "1.0.0"
+paging-ver = "3.1.1"
+paging-compose-ver = "3.2.0-rc01"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -66,6 +68,9 @@ coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil-ver" }
 fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment-ver" }
 datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore-ver" }
 datastore-rx = { group = "androidx.datastore", name = "datastore-rxjava3", version.ref = "datastore-ver" }
+paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging-ver" }
+paging-rx = { group = "androidx.paging", name = "paging-rxjava3", version.ref = "paging-ver" }
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging-compose-ver" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
