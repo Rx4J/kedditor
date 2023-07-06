@@ -36,6 +36,7 @@ class CommentsFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         val postUrl = this.arguments?.getString("post_url") ?: ""
+        val parentSubreddit = this.arguments?.getString("parent_sub") ?: ""
         viewModel = viewModelFactory.getViewModel(
             navController = findNavController(),
             postUrl = postUrl,
@@ -63,7 +64,7 @@ class CommentsFragment : Fragment() {
                         onFragmentResult = {
                             setFragmentResult(
                                 "comments_fragment",
-                                bundleOf("subreddit" to it),
+                                bundleOf("subreddit" to parentSubreddit),
                             )
                         },
                     )
