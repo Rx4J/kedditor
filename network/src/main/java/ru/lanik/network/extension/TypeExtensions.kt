@@ -62,24 +62,44 @@ fun PostDto.toPost(): Post {
 fun List<CommentsDto>.toListComments(): List<Comments> = this.map { item -> item.toComments() }
 
 fun CommentsDto.toComments(): Comments {
-    return Comments(
-        id = data.id,
-        name = data.subreddit ?: "",
-        author = data.author,
-        ups = data.ups,
-        utcTimeStamp = data.createdUtc ?: 1.0,
-        commentsBody = data.bodyComments,
-        replies = null,
-    )
+    return if (kind == "t1") {
+        Comments(
+            id = data.id,
+            name = data.subreddit ?: "",
+            author = data.author,
+            ups = data.ups,
+            utcTimeStamp = data.createdUtc ?: 1.0,
+            commentsBody = data.bodyComments,
+            replies = data.replies?.toReplies(),
+        )
+    } else {
+        Comments(
+            id = "",
+            name = "",
+            author = null,
+            ups = null,
+            utcTimeStamp = 1.0,
+            commentsBody = null,
+            replies = null,
+        )
+    }
+}
+
+private val json = Json {
+    ignoreUnknownKeys = true
+}
+
+fun JsonElement.toReplies(): List<CommentsListingDto>? {
+    return try {
+        json.decodeFromJsonElement<List<CommentsListingDto>>(this)
+    } catch (_: Exception) {
+        null
+    }
 }
 
 fun List<JsonElement>.toPostWithComments(): PostWithComments {
-    val format = Json {
-        ignoreUnknownKeys = true
-    }
-
-    val postDto = format.decodeFromJsonElement<PostListingDto>(first())
-    val commentsDto = format.decodeFromJsonElement<CommentsListingDto>(last())
+    val postDto = json.decodeFromJsonElement<PostListingDto>(first())
+    val commentsDto = json.decodeFromJsonElement<CommentsListingDto>(last())
     return PostWithComments(
         post = postDto.data.children.first().toPost(),
         comments = commentsDto.data.children.toListComments(),

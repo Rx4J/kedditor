@@ -6,6 +6,7 @@ import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class CommentsDto(
+    val kind: String,
     val data: CommentsDataDto,
 ) {
     @Serializable
